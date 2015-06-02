@@ -43,17 +43,14 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
             String remoteContactName = args[2];
             System.out.println(args[2]);
             
-            TCPSender sender = new TCPSender(remoteIp, Integer.parseInt(remotePort));
-            TCPReceiver receiver = TCPReceiver.getInstance();
-            
-            AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
+            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance());
+            communicator.addObserver(this);
             
             Model model = new ModelDefault(new ContactCollectionDefault());
-            this.contact = new Contact(remoteContactName, communicator);
-            
-            model.addContact(contact);
-            
+            this.contact = new Contact(remoteContactName, communicator);            
+            model.addContact(contact);            
             model.addObserver(this);
+            
             //TODO TEMP
             ViewController viewController = JavaFxViewController.getInstance();
             viewController.setSelectedContact(contact);
