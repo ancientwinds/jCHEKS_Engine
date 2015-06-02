@@ -7,6 +7,7 @@ package com.archosResearch.jCHEKS.engine;
 
 import com.archosResearch.jCHEKS.communicator.ReceiverObserver;
 import com.archosResearch.jCHEKS.communicator.SenderObserver;
+import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
 import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
@@ -55,7 +56,7 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
         String remoteContactName = args[2];
         System.out.println(args[2]);
         Engine engine = new Engine();
-        new AppControllerDefault(/* new CHECKSEngine(remoteIp, remotePort),*/new ModelDefault(new ContactCollectionDefault(new ArrayList()), new HashMap<>(), new ArrayList()), JavaFxViewController.getInstance(), remoteContactName);
+        new AppControllerDefault(engine, new ModelDefault(new ContactCollectionDefault()), JavaFxViewController.getInstance(), remoteContactName);
     }
     
 }
