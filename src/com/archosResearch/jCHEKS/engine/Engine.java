@@ -22,8 +22,7 @@ import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 /**
  *
@@ -70,8 +69,9 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
         receiver.addObserver(engine);
         
         AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
-        contacts.add(new Contact(remoteContactName, communicator));
         Model model = new ModelDefault(contacts);
+        model.addContact(new Contact(remoteContactName, communicator));
+
         model.addObserver(engine);
         new AppControllerDefault(model, JavaFxViewController.getInstance());
     }
