@@ -5,15 +5,12 @@
  */
 package com.archosResearch.jCHEKS.engine;
 
-import com.archosResearch.jCHEKS.communicator.ReceiverObserver;
-import com.archosResearch.jCHEKS.communicator.SenderObserver;
-import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 
 /**
  *
- * @author Thomas Lepage thomas.lepage@hotmail.ca
+ * @author Thomas Lepage
  */    
 
-public abstract class AbstractEngine implements SenderObserver, ReceiverObserver, ModelObserver{    
+public abstract class AbstractEngine {    
     
 }

@@ -5,11 +5,14 @@
  */
 package com.archosResearch.jCHEKS.engine;
 
+import com.archosResearch.jCHEKS.communicator.ReceiverObserver;
+import com.archosResearch.jCHEKS.communicator.SenderObserver;
 import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Message;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelDefault;
+import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import java.util.ArrayList;
@@ -19,7 +22,7 @@ import java.util.HashMap;
  *
  * @author Thomas Lepage thomas.lepage@hotmail.ca
  */
-public class Engine extends AbstractEngine{
+public class Engine extends AbstractEngine  implements SenderObserver, ReceiverObserver, ModelObserver{
 
     @Override
     public void ackReceived() {
@@ -51,6 +54,7 @@ public class Engine extends AbstractEngine{
         String remotePort = args[1];
         String remoteContactName = args[2];
         System.out.println(args[2]);
+        Engine engine = new Engine();
         new AppControllerDefault(/* new CHECKSEngine(remoteIp, remotePort),*/new ModelDefault(new ContactCollectionDefault(new ArrayList()), new HashMap<>(), new ArrayList()), JavaFxViewController.getInstance(), remoteContactName);
     }
     
