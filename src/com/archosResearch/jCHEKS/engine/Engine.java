@@ -16,11 +16,13 @@ import com.archosResearch.jCHEKS.gui.chat.AppController;
 import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
+import com.archosResearch.jCHEKS.gui.chat.model.IncomingMessage;
 import com.archosResearch.jCHEKS.gui.chat.model.Message;
 import com.archosResearch.jCHEKS.gui.chat.model.Model;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
+import com.archosResearch.jCHEKS.gui.chat.model.OutgoingMessage;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
@@ -36,7 +38,7 @@ import java.util.logging.Logger;
 public class Engine extends AbstractEngine  implements SenderObserver, ReceiverObserver, ModelObserver{
 
     private AppController appController = null;
-    
+    private Contact contact;
     public Engine(String args[])
     {
         try {
@@ -53,7 +55,8 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
             AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
             
             Model model = new ModelDefault(new ContactCollectionDefault());
-            Contact contact = new Contact(remoteContactName, communicator);
+            this.contact = new Contact(remoteContactName, communicator);
+            
             model.addContact(contact);
             
             model.addObserver(this);
@@ -75,17 +78,17 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
 
     @Override
     public void messageReceived(AbstractCommunication communication) {
-        this.appController.handleIncomingMessage(communication.getChipher(), "Thomas");
+        this.appController.handleIncomingMessage(communication.getChipher(), this.contact);
     }
 
     @Override
-    public void messageSent(Message message, Contact contact) {
+    public void messageSent(OutgoingMessage message, Contact contact) {
         //TODO Clean up!!!!
         contact.getCommunicator().sendCommunication(new Communication(message.getContent(), "temp", "temp"));
     }
 
     @Override
-    public void messageReceived(Message message) {
+    public void messageReceived(IncomingMessage  message, Contact contact) {
         System.out.println("Message received: " + message.getContent());
     }
     
@@ -97,5 +100,5 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
     public static void main(String args[]) throws NameOfContactAlreadyExistInContactsException{
         new Engine(args);
     }
-    
+
 }
