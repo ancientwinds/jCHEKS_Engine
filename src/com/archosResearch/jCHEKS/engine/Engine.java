@@ -8,6 +8,7 @@ package com.archosResearch.jCHEKS.engine;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.ReceiverObserver;
 import com.archosResearch.jCHEKS.communicator.SenderObserver;
+import com.archosResearch.jCHEKS.communicator.tcp.ITCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPCommunicator;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
@@ -39,6 +40,7 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
 
     private AppController appController = null;
     private Contact contact;
+        
     public Engine(String args[])
     {
         try {
