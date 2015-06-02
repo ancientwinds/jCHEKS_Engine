@@ -5,6 +5,7 @@
  */
 package com.archosResearch.jCHEKS.engine;
 
+import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.ReceiverObserver;
 import com.archosResearch.jCHEKS.communicator.SenderObserver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPCommunicator;
@@ -22,8 +23,8 @@ import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
+import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
-import com.archosResearch.jCheks.concept.communicator.Communication;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,8 +74,8 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
     }
 
     @Override
-    public void messageReceived(String message) {
-        this.appController.handleIncomingMessage(message, "Thomas");
+    public void messageReceived(AbstractCommunication communication) {
+        this.appController.handleIncomingMessage(communication.getChipher(), "Thomas");
     }
 
     @Override
@@ -85,7 +86,7 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
 
     @Override
     public void messageReceived(Message message) {
-        System.out.println("Message received: " + message);
+        System.out.println("Message received: " + message.getContent());
     }
     
     @Override
