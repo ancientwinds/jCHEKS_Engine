@@ -13,7 +13,6 @@ import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
 import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
-import com.archosResearch.jCHEKS.gui.chat.model.ContactCollection;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Message;
 import com.archosResearch.jCHEKS.gui.chat.model.Model;
@@ -21,6 +20,7 @@ import com.archosResearch.jCHEKS.gui.chat.model.ModelDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
+import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
 
 
@@ -62,17 +62,22 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
         System.out.println(args[2]);
         Engine engine = new Engine();
         
-        ContactCollection contacts = new ContactCollectionDefault();
         TCPSender sender = new TCPSender(remoteIp, Integer.parseInt(remotePort));
         sender.addObserver(engine);
         TCPReceiver receiver = TCPReceiver.getInstance();
         receiver.addObserver(engine);
         
         AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
-        Model model = new ModelDefault(contacts);
-        model.addContact(new Contact(remoteContactName, communicator));
+        
+        Model model = new ModelDefault(new ContactCollectionDefault());
+        Contact contact = new Contact(remoteContactName, communicator);
+        model.addContact(contact);
 
         model.addObserver(engine);
+        //TODO TEMP
+        ViewController viewController = JavaFxViewController.getInstance();
+        viewController.setSelectedContact(contact);
+        
         new AppControllerDefault(model, JavaFxViewController.getInstance());
     }
     
