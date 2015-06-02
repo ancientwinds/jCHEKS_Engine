@@ -5,6 +5,9 @@
  */
 package com.archosResearch.jCHEKS.engine;
 
+import com.archosResearch.jCHEKS.gui.chat.model.Contact;
+import com.archosResearch.jCHEKS.gui.chat.model.Message;
+
 /**
  *
  * @author Thomas Lepage thomas.lepage@hotmail.ca
@@ -20,12 +23,8 @@ public class Engine extends AbstractEngine{
     public void messageReceived(String aMessage) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    //TODO add reference to the communicator project.
 
-    
-    //TODO add reference to the chatGuiProject.
-    /*@Override
+    @Override
     public void messageSent(Message message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -39,5 +38,5 @@ public class Engine extends AbstractEngine{
     public void contactAdded(Contact contact) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    */
+    
 }
