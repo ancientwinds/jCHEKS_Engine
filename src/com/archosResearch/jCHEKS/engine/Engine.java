@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.archosResearch.jCHEKS.engine;
 
 import com.archosResearch.jCHEKS.communicator.Communication;
-import com.archosResearch.jCHEKS.communicator.ReceiverObserver;
-import com.archosResearch.jCHEKS.communicator.SenderObserver;
-import com.archosResearch.jCHEKS.communicator.tcp.ITCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPCommunicator;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
@@ -18,7 +11,6 @@ import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.IncomingMessage;
-import com.archosResearch.jCHEKS.gui.chat.model.Message;
 import com.archosResearch.jCHEKS.gui.chat.model.Model;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
@@ -28,15 +20,17 @@ import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
+import com.archosResearch.jCheks.concept.communicator.CommunicatorException;
+import com.archosResearch.jCheks.concept.communicator.CommunicatorObserver;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /**
  *
- * @author Thomas Lepage thomas.lepage@hotmail.ca
+ * @author Thomas Lepage
  */
-public class Engine extends AbstractEngine  implements SenderObserver, ReceiverObserver, ModelObserver{
+public class Engine extends AbstractEngine  implements CommunicatorObserver, ModelObserver{
 
     private AppController appController = null;
     private Contact contact;
@@ -50,9 +44,7 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
             System.out.println(args[2]);
             
             TCPSender sender = new TCPSender(remoteIp, Integer.parseInt(remotePort));
-            sender.addObserver(this);
             TCPReceiver receiver = TCPReceiver.getInstance();
-            receiver.addObserver(this);
             
             AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
             
@@ -77,16 +69,20 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
         //TODO ...
         System.out.println("Ack received!!!");
     }
-
+    
     @Override
-    public void messageReceived(AbstractCommunication communication) {
+    public void communicationReceived(AbstractCommunication communication) {
         this.appController.handleIncomingMessage(communication.getChipher(), this.contact);
     }
 
     @Override
     public void messageSent(OutgoingMessage message, Contact contact) {
-        //TODO Clean up!!!!
-        contact.getCommunicator().sendCommunication(new Communication(message.getContent(), "temp", "temp"));
+        try {
+            Communication communication = new Communication(message.getContent(), "chipherCheck", "systemId");
+            contact.getCommunicator().sendCommunication(communication);
+        } catch (CommunicatorException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -102,5 +98,7 @@ public class Engine extends AbstractEngine  implements SenderObserver, ReceiverO
     public static void main(String args[]) throws NameOfContactAlreadyExistInContactsException{
         new Engine(args);
     }
+
+
 
 }
