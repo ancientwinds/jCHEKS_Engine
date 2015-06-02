@@ -11,6 +11,7 @@ import com.archosResearch.jCHEKS.communicator.tcp.TCPCommunicator;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
+import com.archosResearch.jCHEKS.gui.chat.AppController;
 import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
@@ -22,6 +23,9 @@ import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInConta
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
+import com.archosResearch.jCheks.concept.communicator.Communication;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -30,55 +34,67 @@ import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
  */
 public class Engine extends AbstractEngine  implements SenderObserver, ReceiverObserver, ModelObserver{
 
+    private AppController appController = null;
+    
+    public Engine(String args[])
+    {
+        try {
+            String remoteIp = args[0];
+            String remotePort = args[1];
+            String remoteContactName = args[2];
+            System.out.println(args[2]);
+            
+            TCPSender sender = new TCPSender(remoteIp, Integer.parseInt(remotePort));
+            sender.addObserver(this);
+            TCPReceiver receiver = TCPReceiver.getInstance();
+            receiver.addObserver(this);
+            
+            AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
+            
+            Model model = new ModelDefault(new ContactCollectionDefault());
+            Contact contact = new Contact(remoteContactName, communicator);
+            model.addContact(contact);
+            
+            model.addObserver(this);
+            //TODO TEMP
+            ViewController viewController = JavaFxViewController.getInstance();
+            viewController.setSelectedContact(contact);
+            
+            this.appController = new AppControllerDefault(model, JavaFxViewController.getInstance());
+        } catch (NameOfContactAlreadyExistInContactsException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @Override
     public void ackReceived() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO ...
+        System.out.println("Ack received!!!");
     }
 
     @Override
-    public void messageReceived(String aMessage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void messageReceived(String message) {
+        this.appController.handleIncomingMessage(message, "Thomas");
     }
 
     @Override
-    public void messageSent(Message message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void messageSent(Message message, Contact contact) {
+        //TODO Clean up!!!!
+        contact.getCommunicator().sendCommunication(new Communication(message.getContent(), "temp", "temp"));
     }
 
     @Override
     public void messageReceived(Message message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Message received: " + message);
     }
     
     @Override
     public void contactAdded(Contact contact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Contact added");
     }
     
     public static void main(String args[]) throws NameOfContactAlreadyExistInContactsException{
-        String remoteIp = args[0];
-        String remotePort = args[1];
-        String remoteContactName = args[2];
-        System.out.println(args[2]);
-        Engine engine = new Engine();
-        
-        TCPSender sender = new TCPSender(remoteIp, Integer.parseInt(remotePort));
-        sender.addObserver(engine);
-        TCPReceiver receiver = TCPReceiver.getInstance();
-        receiver.addObserver(engine);
-        
-        AbstractCommunicator communicator = new TCPCommunicator(sender, receiver);
-        
-        Model model = new ModelDefault(new ContactCollectionDefault());
-        Contact contact = new Contact(remoteContactName, communicator);
-        model.addContact(contact);
-
-        model.addObserver(engine);
-        //TODO TEMP
-        ViewController viewController = JavaFxViewController.getInstance();
-        viewController.setSelectedContact(contact);
-        
-        new AppControllerDefault(model, JavaFxViewController.getInstance());
+        new Engine(args);
     }
     
 }
