@@ -6,8 +6,6 @@ import com.archosResearch.jCHEKS.communicator.tcp.TCPCommunicator;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
-import com.archosResearch.jCHEKS.gui.chat.AppController;
-import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.AbstractModel;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
@@ -33,8 +31,8 @@ import java.util.logging.Logger;
  */
 public class Engine extends AbstractEngine  implements CommunicatorObserver, ModelObserver{
 
-    private AppController appController = null;
     private Contact contact;
+    private AbstractModel model;
         
     public Engine(String args[])
     {
@@ -55,8 +53,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
             //TODO TEMP
             ViewController viewController = JavaFxViewController.getInstance();
             viewController.setSelectedContact(contact);
-            
-            this.appController = new AppControllerDefault(model, JavaFxViewController.getInstance());
+            model.addObserver(viewController);
+            this.model = model;
         } catch (NameOfContactAlreadyExistInContactsException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,10 +68,9 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
     
     @Override
     public void communicationReceived(AbstractCommunication communication) {
-        
+        this.model.addIncomingMessage(communication.getCipher(), this.contact);
         //TODO Get contact
         //Decrypt message
-        this.appController.handleIncomingMessage(communication.getCipher(), this.contact);
     }
 
     @Override
@@ -99,7 +96,9 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
     public static void main(String args[]) throws NameOfContactAlreadyExistInContactsException{
         new Engine(args);
     }
-
-
+    
+    public void handleOutgoingMessage(String messageContent, Contact contact) {
+        this.model.addOutgoingMessage(messageContent, contact);
+    }
 
 }
