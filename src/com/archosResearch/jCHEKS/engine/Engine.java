@@ -10,11 +10,7 @@ import com.archosResearch.jCHEKS.gui.chat.model.AbstractModel;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.Model;
-import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
-import com.archosResearch.jCHEKS.gui.chat.model.message.IncomingMessage;
-import com.archosResearch.jCHEKS.gui.chat.model.message.OutgoingMessage;
-
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
@@ -27,7 +23,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Thomas Lepage
+ * @author Thomas Lepage  & Michael Roussel <rousselm4@gmail.com>
  */
 public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
