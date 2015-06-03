@@ -36,9 +36,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             String remoteIp = args[0];
             String remotePort = args[1];
             String remoteContactName = args[2];
+            String secondPort = args[3];
             System.out.println(args[2]);
             
-            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance());
+            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance(Integer.parseInt(secondPort)));
             communicator.addObserver(this);
             
             AbstractModel model = new Model(new ContactCollectionDefault());
