@@ -66,12 +66,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public void communicationReceived(AbstractCommunication communication) {
         this.model.addIncomingMessage(communication.getCipher(), this.contact);
-        try {
-            communication = new Communication(communication.getCipher(), "chipherCheck", "systemId");
-            this.contact.getCommunicator().sendCommunication(communication);
-        } catch (CommunicatorException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         //TODO Get contact
         //Decrypt message
     }
@@ -82,6 +77,13 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     public void handleOutgoingMessage(String messageContent, String contactName) {
         this.model.addOutgoingMessage(messageContent, contactName);
+        try {
+            AbstractCommunication communication = new Communication(messageContent, "chipherCheck", "systemId");
+            this.contact.getCommunicator().sendCommunication(communication);
+        } catch (CommunicatorException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
 }
