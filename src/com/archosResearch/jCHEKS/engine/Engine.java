@@ -6,11 +6,11 @@ import com.archosResearch.jCHEKS.communicator.tcp.TCPCommunicator;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPReceiver;
 import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
-import com.archosResearch.jCHEKS.gui.chat.model.AbstractModel;
-import com.archosResearch.jCHEKS.gui.chat.model.Contact;
-import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
-import com.archosResearch.jCHEKS.gui.chat.model.Model;
-import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
+import com.archosResearch.jCHEKS.engine.model.AbstractModel;
+import com.archosResearch.jCHEKS.engine.model.contact.Contact;
+import com.archosResearch.jCHEKS.engine.model.contact.ContactCollection;
+import com.archosResearch.jCHEKS.engine.model.Model;
+import com.archosResearch.jCHEKS.engine.model.NameOfContactAlreadyExistInContactsException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
@@ -42,7 +42,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance(Integer.parseInt(secondPort)));
             communicator.addObserver(this);
             
-            AbstractModel model = new Model(new ContactCollectionDefault());
+            AbstractModel model = new Model(new ContactCollection());
             this.contact = new Contact(remoteContactName, communicator);            
             model.addContact(contact);
             
