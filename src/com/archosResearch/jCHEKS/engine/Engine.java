@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  *
  * @author Thomas Lepage
  */
-public class Engine extends AbstractEngine  implements CommunicatorObserver, ModelObserver{
+public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     private Contact contact;
     private AbstractModel model;
@@ -47,12 +47,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
             
             AbstractModel model = new Model(new ContactCollectionDefault());
             this.contact = new Contact(remoteContactName, communicator);            
-            model.addContact(contact);            
-            model.addObserver(this);
+            model.addContact(contact);
             
             //TODO TEMP
             ViewController viewController = JavaFxViewController.getInstance();
-            viewController.setSelectedContact(contact);
+            viewController.setSelectedContactName(contact.getName());
             model.addObserver(viewController);
             this.model = model;
         } catch (NameOfContactAlreadyExistInContactsException ex) {
@@ -69,36 +68,22 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
     @Override
     public void communicationReceived(AbstractCommunication communication) {
         this.model.addIncomingMessage(communication.getCipher(), this.contact);
-        //TODO Get contact
-        //Decrypt message
-    }
-
-    @Override
-    public void messageSent(OutgoingMessage message, Contact contact) {
         try {
-            Communication communication = new Communication(message.getContent(), "chipherCheck", "systemId");
-            contact.getCommunicator().sendCommunication(communication);
+            communication = new Communication(communication.getCipher(), "chipherCheck", "systemId");
+            this.contact.getCommunicator().sendCommunication(communication);
         } catch (CommunicatorException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    public void messageReceived(IncomingMessage  message, Contact contact) {
-        System.out.println("Message received: " + message.getContent());
-    }
-    
-    @Override
-    public void contactAdded(Contact contact) {
-        System.out.println("Contact added");
+        //TODO Get contact
+        //Decrypt message
     }
     
     public static void main(String args[]) throws NameOfContactAlreadyExistInContactsException{
         new Engine(args);
     }
     
-    public void handleOutgoingMessage(String messageContent, Contact contact) {
-        this.model.addOutgoingMessage(messageContent, contact);
+    public void handleOutgoingMessage(String messageContent, String contactName) {
+        this.model.addOutgoingMessage(messageContent, contactName);
     }
 
 }
