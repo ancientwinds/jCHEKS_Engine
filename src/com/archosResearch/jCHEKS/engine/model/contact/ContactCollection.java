@@ -1,6 +1,7 @@
 package com.archosResearch.jCHEKS.engine.model.contact;
 
-import com.archosResearch.jCHEKS.engine.model.NameOfContactAlreadyExistInContactsException;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 import java.util.ArrayList;
 
 /**
@@ -24,10 +25,10 @@ public class ContactCollection{
         throw new ContactNotFoundException();
     }
 
-    public void add(Contact newContact) throws NameOfContactAlreadyExistInContactsException {
+    public void add(Contact newContact) throws ContactAlreadyExistException {
         for (Contact contact : this.contacts) {
             if (contact.getName().equals(newContact.getName())) {
-                throw new NameOfContactAlreadyExistInContactsException();
+                throw new ContactAlreadyExistException();
             }
         }
         this.contacts.add(newContact);

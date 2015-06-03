@@ -1,6 +1,7 @@
 package com.archosResearch.jCHEKS.engine.model;
 
-import com.archosResearch.jCHEKS.engine.model.contact.ContactNotFoundException;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.ContactCollection;
 import com.archosResearch.jCHEKS.concept.engine.message.AbstractMessage;
@@ -24,7 +25,7 @@ public class Model extends AbstractModel {
     }
 
     @Override
-    public void addContact(Contact contact) throws NameOfContactAlreadyExistInContactsException {
+    public void addContact(Contact contact) throws ContactAlreadyExistException {
         this.contactCollection.add(contact);
         this.messages.put(contact, new HashSet());
     }

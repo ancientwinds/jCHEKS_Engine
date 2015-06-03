@@ -1,4 +1,4 @@
-package com.archosResearch.jCHEKS.engine.model.contact;
+package com.archosResearch.jCHEKS.engine.model.contact.exception;
 
 /**
  *
