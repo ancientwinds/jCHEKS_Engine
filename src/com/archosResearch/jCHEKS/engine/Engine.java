@@ -69,7 +69,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
     
     @Override
     public void communicationReceived(AbstractCommunication communication) {
-        this.appController.handleIncomingMessage(communication.getChipher(), this.contact);
+        
+        //TODO Get contact
+        //Decrypt message
+        this.appController.handleIncomingMessage(communication.getCipher(), this.contact);
     }
 
     @Override
