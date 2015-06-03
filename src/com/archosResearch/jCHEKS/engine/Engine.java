@@ -48,7 +48,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             //TODO TEMP
             ViewController viewController = JavaFxViewController.getInstance();
-            viewController.setSelectedContactName(contact.getName());
+            viewController.setSelectedContactName(remoteContactName);
+            viewController.setEngine(this);
             model.addObserver(viewController);
             this.model = model;
         } catch (NameOfContactAlreadyExistInContactsException ex) {
