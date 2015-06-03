@@ -8,14 +8,15 @@ import com.archosResearch.jCHEKS.communicator.tcp.TCPSender;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
 import com.archosResearch.jCHEKS.gui.chat.AppController;
 import com.archosResearch.jCHEKS.gui.chat.AppControllerDefault;
+import com.archosResearch.jCHEKS.gui.chat.model.AbstractModel;
 import com.archosResearch.jCHEKS.gui.chat.model.Contact;
 import com.archosResearch.jCHEKS.gui.chat.model.ContactCollectionDefault;
-import com.archosResearch.jCHEKS.gui.chat.model.IncomingMessage;
 import com.archosResearch.jCHEKS.gui.chat.model.Model;
-import com.archosResearch.jCHEKS.gui.chat.model.ModelDefault;
 import com.archosResearch.jCHEKS.gui.chat.model.ModelObserver;
 import com.archosResearch.jCHEKS.gui.chat.model.NameOfContactAlreadyExistInContactsException;
-import com.archosResearch.jCHEKS.gui.chat.model.OutgoingMessage;
+import com.archosResearch.jCHEKS.gui.chat.model.message.IncomingMessage;
+import com.archosResearch.jCHEKS.gui.chat.model.message.OutgoingMessage;
+
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
@@ -46,7 +47,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver, Mod
             AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance());
             communicator.addObserver(this);
             
-            Model model = new ModelDefault(new ContactCollectionDefault());
+            AbstractModel model = new Model(new ContactCollectionDefault());
             this.contact = new Contact(remoteContactName, communicator);            
             model.addContact(contact);            
             model.addObserver(this);
