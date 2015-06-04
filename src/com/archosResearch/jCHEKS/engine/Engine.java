@@ -11,6 +11,8 @@ import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.ContactCollection;
 import com.archosResearch.jCHEKS.engine.model.Model;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
+import com.archosResearch.jCHEKS.engine.model.exception.AddIncomingMessageException;
+import com.archosResearch.jCHEKS.engine.model.exception.AddOutgoingMessageException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCheks.concept.ioManager.InputOutputManager;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
@@ -42,7 +44,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance(Integer.parseInt(secondPort)));
             communicator.addObserver(this);
             
-            AbstractModel model = new Model(new ContactCollection());
+            this.model = new Model();
             this.contact = new Contact(remoteContactName, communicator);            
             model.addContact(contact);
             
@@ -51,7 +53,6 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             ioManager.setSelectedContactName(remoteContactName);
             ioManager.setEngine(this);
             model.addObserver(ioManager);
-            this.model = model;
         } catch (ContactAlreadyExistException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,22 +66,27 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     @Override
     public void communicationReceived(AbstractCommunication communication) {
-        this.model.addIncomingMessage(communication.getCipher(), this.contact);
-        
-        //TODO Get contact
-        //Decrypt message
+        try {
+            this.model.addIncomingMessage(communication.getCipher(), this.contact);
+        } catch (AddIncomingMessageException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+            //TODO Better handling of exceptions.
+        }
+
     }
     
     public static void main(String args[]) throws ContactAlreadyExistException{
         new Engine(args);
     }
     
+    @Override
     public void handleOutgoingMessage(String messageContent, String contactName) {
-        this.model.addOutgoingMessage(messageContent, contactName);
         try {
-            AbstractCommunication communication = new Communication(messageContent, "chipherCheck", "systemId");
-            this.contact.getCommunicator().sendCommunication(communication);
-        } catch (CommunicatorException ex) {
+            this.model.addOutgoingMessage(messageContent, contactName);
+            
+            //TODO: Do not respect Law of Demeter 
+            this.contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", "systemId"));
+        } catch (AddOutgoingMessageException | CommunicatorException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         
