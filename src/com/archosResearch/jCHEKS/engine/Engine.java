@@ -12,7 +12,7 @@ import com.archosResearch.jCHEKS.engine.model.contact.ContactCollection;
 import com.archosResearch.jCHEKS.engine.model.Model;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
-import com.archosResearch.jCHEKS.gui.chat.view.ViewController;
+import com.archosResearch.jCheks.concept.ioManager.InputOutputManager;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
 import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
 import com.archosResearch.jCheks.concept.communicator.CommunicatorException;
@@ -47,10 +47,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             model.addContact(contact);
             
             //TODO TEMP
-            ViewController viewController = JavaFxViewController.getInstance();
-            viewController.setSelectedContactName(remoteContactName);
-            viewController.setEngine(this);
-            model.addObserver(viewController);
+            InputOutputManager ioManager = JavaFxViewController.getInstance();
+            ioManager.setSelectedContactName(remoteContactName);
+            ioManager.setEngine(this);
+            model.addObserver(ioManager);
             this.model = model;
         } catch (ContactAlreadyExistException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
