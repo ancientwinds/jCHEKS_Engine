@@ -4,3 +4,5 @@
 *.jar
 /dist/
 /build/
+/nbproject/private/
+/.jacocoverage/
