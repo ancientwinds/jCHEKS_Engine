@@ -1,7 +1,7 @@
 package com.archosResearch.jCHEKS.engine.model.contact;
 
 import com.archosResearch.jCHEKS.engine.mock.StubCommunicator;
-import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
+import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

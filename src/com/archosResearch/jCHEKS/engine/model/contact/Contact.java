@@ -1,6 +1,6 @@
 package com.archosResearch.jCHEKS.engine.model.contact;
 
-import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
+import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
 
 /**
  *

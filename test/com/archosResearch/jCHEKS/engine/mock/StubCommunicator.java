@@ -1,7 +1,7 @@
 package com.archosResearch.jCHEKS.engine.mock;
 
-import com.archosResearch.jCheks.concept.communicator.AbstractCommunication;
-import com.archosResearch.jCheks.concept.communicator.AbstractCommunicator;
+import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunication;
+import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
 
 /**
  *

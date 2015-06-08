@@ -2,7 +2,7 @@ package com.archosResearch.jCHEKS.engine.mock;
 
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
-import com.archosResearch.jCheks.concept.ioManager.InputOutputManager;
+import com.archosResearch.jCHEKS.concept.ioManager.InputOutputManager;
 
 /**
  *
