@@ -11,9 +11,5 @@ public class ContactNotFoundException extends EngineException {
     public ContactNotFoundException(String message) {
         super(message);
     }
-    
-    public ContactNotFoundException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
 
 }

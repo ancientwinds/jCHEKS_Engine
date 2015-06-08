@@ -11,9 +11,5 @@ public class ContactAlreadyExistException extends EngineException {
     public ContactAlreadyExistException(String message) {
         super(message);
     }
-    
-    public ContactAlreadyExistException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
 
 }
