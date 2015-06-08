@@ -22,13 +22,13 @@ public class ContactCollection{
                 return contact;
             }
         }
-        throw new ContactNotFoundException();
+        throw new ContactNotFoundException("Contact doesn't exist in this contact collection.");
     }
 
     public void add(Contact newContact) throws ContactAlreadyExistException {
         for (Contact contact : this.contacts) {
             if (contact.getName().equals(newContact.getName())) {
-                throw new ContactAlreadyExistException();
+                throw new ContactAlreadyExistException("Contact already exist in this contact collection.");
             }
         }
         this.contacts.add(newContact);

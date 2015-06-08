@@ -18,17 +18,17 @@ public class ModelExceptionThrower extends AbstractModel {
 
     @Override
     public void addContact(Contact contact) throws ContactAlreadyExistException {
-        throw new ContactAlreadyExistException();
+        throw new ContactAlreadyExistException("ContactAlreadyExistException");
     }
 
     @Override
     public void addIncomingMessage(String messageContent, Contact contact) throws AddIncomingMessageException {
-        throw new AddIncomingMessageException("AddIncomingMessageException", new Exception());
+        throw new AddIncomingMessageException("AddIncomingMessageException");
     }
 
     @Override
     public void addOutgoingMessage(String messageContent, String contactName) throws AddOutgoingMessageException {
-        throw new AddOutgoingMessageException("AddOutgoingMessageException", new Exception());
+        throw new AddOutgoingMessageException("AddOutgoingMessageException");
     }
     
 }
