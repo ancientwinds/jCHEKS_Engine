@@ -16,8 +16,8 @@ import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.ioManager.InputOutputManager;
 import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunication;
 import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
-import com.archosResearch.jCHEKS.concept.communicator.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.communicator.CommunicatorObserver;
+import com.archosResearch.jCHEKS.concept.exception.AbstractCommunicatorException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,7 +85,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             //TODO: Do not respect Law of Demeter 
             this.contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", "systemId"));
-        } catch (AddOutgoingMessageException | CommunicatorException ex) {
+        } catch (AddOutgoingMessageException | AbstractCommunicatorException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         
