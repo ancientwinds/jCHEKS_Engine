@@ -2,14 +2,21 @@ package com.archosResearch.jCHEKS.engine.model.message;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michael Roussel <rousselm4@gmail.com>
- *//*
+ */
 public class MessageTest {
+    
+    @Test
+    public void voidTest() throws Exception {
 
+        fail("Not implemented.");
+    }
+/*
     @Test
     public void constructor_should_create_the_message() {
         AbstractMessage message = null;
@@ -32,5 +39,5 @@ public class MessageTest {
         String result = message.getContent();
         assertEquals(expResult, result);
     }
-
-}*/
+*/
+}

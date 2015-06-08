@@ -1,13 +1,23 @@
 package com.archosResearch.jCHEKS.engine.model.message;
 
+import static org.junit.Assert.fail;
+import org.junit.Test;
+
 
 
 /**
  *
  * @author Michael Roussel <rousselm4@gmail.com>
- *//*
+ */
 public class ContactTest {
+    
+    @Test
+    public void voidTest() throws Exception {
 
+        fail("Not implemented.");
+    }
+    
+/*
     @Test
     public void constructor_should_create_a_contact() {
         Contact contact = null;
@@ -30,5 +40,5 @@ public class ContactTest {
         AbstractCommunicator result = contact.getCommunicator();
         assertEquals(communicator, result);
     }
-}
 */
+}

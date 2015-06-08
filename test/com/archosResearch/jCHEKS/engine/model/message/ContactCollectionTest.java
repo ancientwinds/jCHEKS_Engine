@@ -1,13 +1,21 @@
 package com.archosResearch.jCHEKS.engine.model.message;
-
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 
 /**
  *
  * @author Michael Roussel <rousselm4@gmail.com>
- *//*
+ */
 public class ContactCollectionTest {
+    
+    @Test
+    public void voidTest() throws Exception {
 
+        fail("Not implemented.");
+    }
+    
+/*
     @Test
     public void constructor_should_create_the_contact_collection() throws Exception {
         ContactCollection contactCollection = null;
@@ -55,6 +63,5 @@ public class ContactCollectionTest {
         Contact result = contactCollection.findByName("Alice");
         assertEquals(result, contact);
     }
-
-}
 */
+}

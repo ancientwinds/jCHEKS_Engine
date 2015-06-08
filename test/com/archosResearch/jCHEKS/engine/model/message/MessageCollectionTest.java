@@ -3,14 +3,22 @@ package com.archosResearch.jCHEKS.engine.model.message;
 import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michael Roussel <rousselm4@gmail.com>
- *//*
+ */
 public class MessageCollectionTest {
+    
+    @Test
+    public void voidTest() throws Exception {
 
+        fail("Not implemented.");
+    }
+    
+/*
     @Test
     public void constructor_should_create_the_message_collection() throws Exception {
         MessageCollection messageCollection = null;
@@ -39,6 +47,5 @@ public class MessageCollectionTest {
         result = messageCollection.getAllMessages();
         assertEquals(result, expectedResult);
     }
-
-}
 */
+}

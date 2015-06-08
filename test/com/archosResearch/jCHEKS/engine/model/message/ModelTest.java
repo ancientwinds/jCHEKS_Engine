@@ -1,13 +1,21 @@
 package com.archosResearch.jCHEKS.engine.model.message;
 
+import static org.junit.Assert.fail;
+import org.junit.Test;
+
 
 
 /**
  *
  * @author Michael Roussel <rousselm4@gmail.com>
- *//*
+ */
 public class ModelTest {
-
+    
+    @Test
+    public void voidTest() throws Exception {
+        fail("Not implemented.");
+    }
+    /*
     @Test
     public void constructor_should_construct_the_object() {
         AbstractModel model = null;
@@ -67,5 +75,5 @@ public class ModelTest {
         model.addIncomingMessage("Test message", contact);
         assertNull(observer.lastMessageReceived);
     }
-
-}*/
+*/
+}
