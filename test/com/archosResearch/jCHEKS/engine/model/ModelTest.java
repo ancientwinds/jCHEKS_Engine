@@ -69,10 +69,10 @@ public class ModelTest {
         model.addContact(contact);
         model.addObserver(observer);
         model.addIncomingMessage(messageContent, contact);
-        assertEquals(messageContent, observer.lastMessageSent.getContent());
+        assertEquals(messageContent, observer.lastMessageReceived.getContent());
     }
 
-    @Test (expected = AddOutgoingMessageException.class)
+    @Test (expected = AddIncomingMessageException.class)
     public void addIncomingMessage_should_throw_AddIncomingMessageException_if_contact_related_to_message_not_exist() throws ContactAlreadyExistException, AddIncomingMessageException {
         Model model = new Model();
         model.addIncomingMessage("Hello", new Contact("Alice", new StubCommunicator()));
