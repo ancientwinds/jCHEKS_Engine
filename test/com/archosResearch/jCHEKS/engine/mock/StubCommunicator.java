@@ -1,7 +1,6 @@
 package com.archosResearch.jCHEKS.engine.mock;
 
-import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunication;
-import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
+import com.archosResearch.jCHEKS.concept.communicator.*;
 
 /**
  *
@@ -10,7 +9,6 @@ import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
 public class StubCommunicator extends AbstractCommunicator {
 
     @Override
-    public void sendCommunication(AbstractCommunication aCommunication) {
-    }
+    public void sendCommunication(AbstractCommunication aCommunication) {}
 
 }

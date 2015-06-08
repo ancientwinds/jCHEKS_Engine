@@ -1,7 +1,6 @@
 package com.archosResearch.jCHEKS.engine.model;
 
-import com.archosResearch.jCHEKS.engine.model.exception.AddOutgoingMessageException;
-import com.archosResearch.jCHEKS.engine.model.exception.AddIncomingMessageException;
+import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.concept.engine.ModelObservable;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;

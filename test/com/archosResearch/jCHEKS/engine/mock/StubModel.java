@@ -3,8 +3,7 @@ package com.archosResearch.jCHEKS.engine.mock;
 import com.archosResearch.jCHEKS.engine.model.AbstractModel;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
-import com.archosResearch.jCHEKS.engine.model.exception.AddIncomingMessageException;
-import com.archosResearch.jCHEKS.engine.model.exception.AddOutgoingMessageException;
+import com.archosResearch.jCHEKS.engine.model.exception.*;
 
 /**
  *

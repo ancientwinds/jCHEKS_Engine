@@ -1,11 +1,7 @@
 package com.archosResearch.jCHEKS.engine.model.message;
 
-import com.archosResearch.jCHEKS.concept.engine.message.AbstractMessage;
-import com.archosResearch.jCHEKS.concept.engine.message.IncomingMessage;
-import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import com.archosResearch.jCHEKS.concept.engine.message.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**

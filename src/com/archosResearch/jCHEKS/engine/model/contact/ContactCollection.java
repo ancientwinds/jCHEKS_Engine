@@ -1,8 +1,7 @@
 package com.archosResearch.jCHEKS.engine.model.contact;
 
-import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
-import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
-import java.util.ArrayList;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.*;
+import java.util.HashSet;
 
 /**
  *
@@ -10,10 +9,10 @@ import java.util.ArrayList;
  */
 public class ContactCollection{
 
-    private final ArrayList<Contact> contacts;
+    private final HashSet<Contact> contacts;
 
     public ContactCollection() {
-        this.contacts = new ArrayList();
+        this.contacts = new HashSet();
     }
 
     public Contact findByName(String name) throws ContactNotFoundException {

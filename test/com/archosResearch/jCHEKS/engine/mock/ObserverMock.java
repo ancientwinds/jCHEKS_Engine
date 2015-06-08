@@ -1,9 +1,7 @@
 package com.archosResearch.jCHEKS.engine.mock;
 
 import com.archosResearch.jCHEKS.concept.engine.ModelObserver;
-import com.archosResearch.jCHEKS.concept.engine.message.IncomingMessage;
-import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
-import com.archosResearch.jCHEKS.engine.model.contact.Contact;
+import com.archosResearch.jCHEKS.concept.engine.message.*;
 
 /**
  *

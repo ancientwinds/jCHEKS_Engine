@@ -1,19 +1,12 @@
 package com.archosResearch.jCHEKS.engine.model;
 
-import com.archosResearch.jCHEKS.engine.model.exception.AddIncomingMessageException;
-import com.archosResearch.jCHEKS.engine.model.exception.AddMessageException;
-import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
-import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
-import com.archosResearch.jCHEKS.engine.model.contact.Contact;
-import com.archosResearch.jCHEKS.engine.model.contact.ContactCollection;
-import com.archosResearch.jCHEKS.concept.engine.message.AbstractMessage;
-import com.archosResearch.jCHEKS.concept.engine.message.IncomingMessage;
-import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
+import com.archosResearch.jCHEKS.engine.model.exception.*;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.*;
+import com.archosResearch.jCHEKS.engine.model.contact.*;
+import com.archosResearch.jCHEKS.concept.engine.message.*;
 import com.archosResearch.jCHEKS.engine.model.exception.AddOutgoingMessageException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -38,13 +31,14 @@ public class Model extends AbstractModel {
 
     @Override
     public void addOutgoingMessage(String messageContent, String contactName) throws AddOutgoingMessageException {
-        OutgoingMessage message= new OutgoingMessage(messageContent);
+        OutgoingMessage message = new OutgoingMessage(messageContent);
         try {
             addMessageToContact(message, contactName);
+            this.notifyMessageSent(message, contactName);
         } catch (AddMessageException ex) {
             throw new AddOutgoingMessageException("Unable to add outgoing message.", ex);
         }
-        this.notifyMessageSent(message, contactName);
+            
     }
 
     @Override
@@ -52,22 +46,24 @@ public class Model extends AbstractModel {
         IncomingMessage message = new IncomingMessage(messageContent);
         try {
             addMessageToContact(message, contact.getName());
+            this.notifyMessageReceived(message, contact.getName());
         } catch (AddMessageException ex) {
             throw new AddIncomingMessageException("Unable to add incoming message.", ex);
         }
-        this.notifyMessageReceived(message, contact.getName());
+        
     }
-    
-    private void addMessageToContact(AbstractMessage message, String contactName) throws AddMessageException{
+
+    private void addMessageToContact(AbstractMessage message, String contactName) throws AddMessageException {
         try {
             addMessage(message, contactCollection.findByName(contactName));
-        } catch (ContactNotFoundException ex){
+        } catch (ContactNotFoundException ex) {
             throw new AddMessageException("Unable to add message.", ex);
         }
     }
-     private void addMessage(AbstractMessage message, Contact contact){
-            HashSet contactMessages = this.messages.get(contact);
-            contactMessages.add(message);
+
+    private void addMessage(AbstractMessage message, Contact contact) {
+        HashSet contactMessages = this.messages.get(contact);
+        contactMessages.add(message);
     }
-    
+
 }

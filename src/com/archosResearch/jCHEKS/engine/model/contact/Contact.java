@@ -14,8 +14,8 @@ public class Contact {
     private final AbstractCommunicator communicator;
     //private final AbstractEncrypter encrypter;
 
-    public Contact(String aName, AbstractCommunicator communicator/*, int aSenderChaoticSystemId, int aReceiverChaoticSystemId*/) {
-        this.name = aName;
+    public Contact(String name, AbstractCommunicator communicator/*, int aSenderChaoticSystemId, int aReceiverChaoticSystemId*/) {
+        this.name = name;
         this.communicator = communicator;
         //this.senderChaoticSystemId = aSenderChaoticSystemId;
         //this.receiverChaoticSystemId = aReceiverChaoticSystemId;
