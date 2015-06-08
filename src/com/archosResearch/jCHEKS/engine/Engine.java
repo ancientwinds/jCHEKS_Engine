@@ -28,33 +28,15 @@ import java.util.logging.Logger;
  */
 public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
-    private Contact contact;
-    private AbstractModel model;
+    private final Contact contact;
+    private final AbstractModel model;
         
-    public Engine(String args[])
-    {
-        try {
-            String remoteIp = args[0];
-            String remotePort = args[1];
-            String remoteContactName = args[2];
-            String secondPort = args[3];
-            System.out.println(args[2]);
-            
-            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(remotePort)), TCPReceiver.getInstance(Integer.parseInt(secondPort)));
+    public Engine(AbstractCommunicator communicator, AbstractModel model, InputOutputManager ioManager, /*TEMP*/Contact contact){
+            this.model = model;
+            this.model.addObserver(ioManager);
+            this.contact = contact;
             communicator.addObserver(this);
-            
-            this.model = new Model();
-            this.contact = new Contact(remoteContactName, communicator);            
-            model.addContact(contact);
-            
-            //TODO TEMP
-            InputOutputManager ioManager = JavaFxViewController.getInstance();
-            ioManager.setSelectedContactName(remoteContactName);
             ioManager.setEngine(this);
-            model.addObserver(ioManager);
-        } catch (ContactAlreadyExistException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     @Override
@@ -75,7 +57,17 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     }
     
     public static void main(String args[]) throws ContactAlreadyExistException{
-        new Engine(args);
+        String remoteIp = args[0];
+        String sendingPort = args[1];
+        String remoteContactName = args[2];
+        String receivingPort = args[3];
+        AbstractModel model = new Model();
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(sendingPort)), TCPReceiver.getInstance(Integer.parseInt(receivingPort)));          
+        Contact contact = new Contact(remoteContactName, communicator);
+        model.addContact(contact);
+        InputOutputManager ioManager = JavaFxViewController.getInstance();
+        ioManager.setSelectedContactName(remoteContactName);
+        new Engine(communicator, model, ioManager, contact);
     }
     
     @Override
