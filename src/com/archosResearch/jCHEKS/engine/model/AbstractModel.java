@@ -5,7 +5,6 @@ import com.archosResearch.jCHEKS.engine.model.exception.AddIncomingMessageExcept
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.concept.engine.ModelObservable;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
-import java.util.ArrayList;
 
 /**
  *

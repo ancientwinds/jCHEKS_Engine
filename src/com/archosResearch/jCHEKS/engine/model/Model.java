@@ -33,6 +33,7 @@ public class Model extends AbstractModel {
     public void addContact(Contact contact) throws ContactAlreadyExistException {
         this.contactCollection.add(contact);
         this.messages.put(contact, new HashSet());
+        this.notifyContactAdded(contact.getName());
     }
 
     @Override
