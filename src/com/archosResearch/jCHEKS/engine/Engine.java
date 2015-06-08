@@ -23,10 +23,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     private final Contact contact;
     private final AbstractModel model;
         
-    public Engine(AbstractCommunicator communicator, AbstractModel model, InputOutputManager ioManager, /*TEMP*/Contact contact){
+    public Engine(AbstractCommunicator communicator, AbstractModel model, InputOutputManager ioManager, /*TEMP*/String contactName) throws ContactAlreadyExistException{
             this.model = model;
             this.model.addObserver(ioManager);
-            this.contact = contact;
+            this.contact = new Contact(contactName, communicator);
+            model.addContact(this.contact);
+            ioManager.setSelectedContactName(contactName);
             communicator.addObserver(this);
             ioManager.setEngine(this);
     }
@@ -51,16 +53,13 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     public static void main(String args[]) throws ContactAlreadyExistException{
         String remoteIp = args[0];
-        String sendingPort = args[1];
+        int sendingPort = Integer.parseInt(args[1]);
         String remoteContactName = args[2];
-        String receivingPort = args[3];
+        int receivingPort = Integer.parseInt(args[3]);
         AbstractModel model = new Model();
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(sendingPort)), TCPReceiver.getInstance(Integer.parseInt(receivingPort)));          
-        Contact contact = new Contact(remoteContactName, communicator);
-        model.addContact(contact);
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, sendingPort), TCPReceiver.getInstance(receivingPort));          
         InputOutputManager ioManager = JavaFxViewController.getInstance();
-        ioManager.setSelectedContactName(remoteContactName);
-        new Engine(communicator, model, ioManager, contact);
+        new Engine(communicator, model, ioManager, remoteContactName);
     }
     
     @Override

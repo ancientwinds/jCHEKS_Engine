@@ -15,9 +15,7 @@ public class ModelExceptionThrower extends AbstractModel {
     }
 
     @Override
-    public void addContact(Contact contact) throws ContactAlreadyExistException {
-        throw new ContactAlreadyExistException("ContactAlreadyExistException");
-    }
+    public void addContact(Contact contact) throws ContactAlreadyExistException {}
 
     @Override
     public void addIncomingMessage(String messageContent, Contact contact) throws AddIncomingMessageException {
