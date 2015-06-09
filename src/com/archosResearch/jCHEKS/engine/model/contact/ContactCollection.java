@@ -15,13 +15,22 @@ public class ContactCollection{
         this.contacts = new HashSet();
     }
 
+    public Contact findByReceiverSystemId(String receiverSystemId) throws ContactNotFoundException{
+       for (Contact contact : this.contacts) {
+            if (contact.getReceiverChaoticSystemId().equals(receiverSystemId)) {
+                return contact;
+            }
+        }
+        throw new ContactNotFoundException("Contact with this receiver system id doesn't exist in this contact collection.");
+    }
+    
     public Contact findByName(String name) throws ContactNotFoundException {
         for (Contact contact : this.contacts) {
             if (contact.getName().equals(name)) {
                 return contact;
             }
         }
-        throw new ContactNotFoundException("Contact doesn't exist in this contact collection.");
+        throw new ContactNotFoundException("Contact with this name doesn't exist in this contact collection.");
     }
 
     public void add(Contact newContact) throws ContactAlreadyExistException {
@@ -32,5 +41,6 @@ public class ContactCollection{
         }
         this.contacts.add(newContact);
     }
+
 
 }
