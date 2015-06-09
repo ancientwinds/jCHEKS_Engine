@@ -40,14 +40,16 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     }
     
     @Override
-    public void communicationReceived(AbstractCommunication communication) {
+    public String communicationReceived(AbstractCommunication communication) {
         try {
             this.model.addIncomingMessage(communication.getCipher(), this.contact); 
+            return "Testing secure ACK";
             //TODO findContactByCommunicator(). 
         } catch (AddIncomingMessageException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
             //TODO Better handling of exceptions.
         }
+        return null;
 
     }
     
