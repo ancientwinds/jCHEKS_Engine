@@ -10,15 +10,15 @@ public class Contact {
 
     private final String name;
     //private final int senderChaoticSystemId;
-    //private final int receiverChaoticSystemId;
+    private final String receiverChaoticSystemId;
     private final AbstractCommunicator communicator;
     //private final AbstractEncrypter encrypter;
 
-    public Contact(String name, AbstractCommunicator communicator/*, int aSenderChaoticSystemId, int aReceiverChaoticSystemId*/) {
+    public Contact(String name, AbstractCommunicator communicator/*, int aSenderChaoticSystemId*/, String receiverChaoticSystemId) {
         this.name = name;
         this.communicator = communicator;
         //this.senderChaoticSystemId = aSenderChaoticSystemId;
-        //this.receiverChaoticSystemId = aReceiverChaoticSystemId;
+        this.receiverChaoticSystemId = receiverChaoticSystemId;
     }
 
     public String getName() {
@@ -27,5 +27,9 @@ public class Contact {
 
     public AbstractCommunicator getCommunicator() {
         return this.communicator;
+    }
+    
+    public String getReceiverChaoticSystemId(){
+        return receiverChaoticSystemId;
     }
 }
