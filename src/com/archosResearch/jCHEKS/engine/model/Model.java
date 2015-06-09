@@ -65,5 +65,14 @@ public class Model extends AbstractModel {
         HashSet contactMessages = this.messages.get(contact);
         contactMessages.add(message);
     }
-
+    
+    @Override
+    public Contact findContactByReceiverSystemId(String systemId) throws ContactNotFoundException{
+        return this.contactCollection.findByReceiverSystemId(systemId);
+    }
+    
+    @Override
+    public Contact findContactByName(String name) throws ContactNotFoundException{
+        return this.contactCollection.findByName(name);
+    }
 }
