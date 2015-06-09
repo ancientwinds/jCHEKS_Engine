@@ -11,6 +11,8 @@ import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.ioManager.InputOutputManager;
 import com.archosResearch.jCHEKS.concept.communicator.*;
 import com.archosResearch.jCHEKS.concept.exception.AbstractCommunicatorException;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
+import java.util.UUID;
 import java.util.logging.*;
 
 
@@ -19,17 +21,11 @@ import java.util.logging.*;
  * @author Thomas Lepage  & Michael Roussel <rousselm4@gmail.com>
  */
 public class Engine extends AbstractEngine  implements CommunicatorObserver{
-
-    private final Contact contact;
     private final AbstractModel model;
         
-    public Engine(AbstractCommunicator communicator, AbstractModel model, InputOutputManager ioManager, /*TEMP*/String contactName) throws ContactAlreadyExistException{
+    public Engine(AbstractModel model, InputOutputManager ioManager) throws ContactAlreadyExistException{
             this.model = model;
             this.model.addObserver(ioManager);
-            this.contact = new Contact(contactName, communicator);
-            model.addContact(this.contact);
-            ioManager.setSelectedContactName(contactName);
-            communicator.addObserver(this);
             ioManager.setEngine(this);
     }
     
@@ -48,11 +44,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public String communicationReceived(AbstractCommunication communication) {
         try {
-            this.model.addIncomingMessage(communication.getCipher(), this.contact); 
+            Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
+            this.model.addIncomingMessage(communication.getCipher(), contact); 
             //TODO return something else.
             return "Testing secure ACK";
-            //TODO findContactByCommunicator(). 
-        } catch (AddIncomingMessageException ex) {
+        } catch (AddIncomingMessageException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
             //TODO Better handling of exceptions.
         }
@@ -60,15 +56,16 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     }
     
+    public void addContact(String contactName, String remoteIp, String sendingPort, String receivingPort){
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(sendingPort)), TCPReceiver.getInstance(Integer.parseInt(receivingPort)));          
+        communicator.addObserver(this);
+        Contact contact = new Contact(contactName, communicator, UUID.randomUUID().toString());
+    }
+    
     public static void main(String args[]) throws ContactAlreadyExistException{
-        String remoteIp = args[0];
-        int sendingPort = Integer.parseInt(args[1]);
-        String remoteContactName = args[2];
-        int receivingPort = Integer.parseInt(args[3]);
         AbstractModel model = new Model();
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, sendingPort), TCPReceiver.getInstance(receivingPort));          
         InputOutputManager ioManager = JavaFxViewController.getInstance();
-        new Engine(communicator, model, ioManager, remoteContactName);
+        new Engine(model, ioManager);
     }
     
     @Override
@@ -77,8 +74,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addOutgoingMessage(messageContent, contactName);
             
             //TODO: Do not respect Law of Demeter or find a better name for contact.
-            this.contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", "systemId"));
-        } catch (AddOutgoingMessageException | AbstractCommunicatorException ex) {
+            this.model.findContactByName(contactName).getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", "systemId"));
+        } catch (AddOutgoingMessageException | AbstractCommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         
