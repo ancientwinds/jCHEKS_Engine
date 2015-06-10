@@ -26,7 +26,7 @@ public class Model extends AbstractModel {
     public void addContact(Contact contact) throws ContactAlreadyExistException {
         this.contactCollection.add(contact);
         this.messages.put(contact, new HashSet());
-        this.notifyContactAdded(contact.getName());
+        this.notifyContactAdded(contact.getContactInfo().getName());
     }
 
     @Override
@@ -45,8 +45,8 @@ public class Model extends AbstractModel {
     public void addIncomingMessage(String messageContent, Contact contact) throws AddIncomingMessageException {
         IncomingMessage message = new IncomingMessage(messageContent);
         try {
-            addMessageToContact(message, contact.getName());
-            this.notifyMessageReceived(message, contact.getName());
+            addMessageToContact(message, contact.getContactInfo().getName());
+            this.notifyMessageReceived(message, contact.getContactInfo().getName());
         } catch (AddMessageException ex) {
             throw new AddIncomingMessageException("Unable to add incoming message.", ex);
         }
@@ -68,7 +68,7 @@ public class Model extends AbstractModel {
     
     @Override
     public Contact findContactByReceiverSystemId(String systemId) throws ContactNotFoundException{
-        return this.contactCollection.findByReceiverSystemId(systemId);
+        return this.contactCollection.findByUniqueId(systemId);
     }
     
     @Override

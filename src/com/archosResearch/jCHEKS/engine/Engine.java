@@ -8,11 +8,10 @@ import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
-import com.archosResearch.jCHEKS.concept.ioManager.InputOutputManager;
 import com.archosResearch.jCHEKS.concept.communicator.*;
 import com.archosResearch.jCHEKS.concept.exception.AbstractCommunicatorException;
+import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
-import java.util.UUID;
 import java.util.logging.*;
 
 
@@ -56,10 +55,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     }
     
-    public void createContact(String contactName, String remoteIp, int sendingPort, String uniqueId){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, sendingPort), TCPReceiver.getInstance(), uniqueId/*Maybe system id or something else, used as unique id.*/);          
+    @Override
+    public void createContact(ContactInfo contactInfo){
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
-        Contact contact = new Contact(contactName, communicator, uniqueId);
+        Contact contact = new Contact(contactInfo, communicator);
         try {
             model.addContact(contact);
         } catch (ContactAlreadyExistException ex) {
@@ -80,11 +80,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             //TODO: Do not respect Law of Demeter or find a better name for contact.
             Contact contact = this.model.findContactByName(contactName);
-            contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contact.getReceiverChaoticSystemId()));
+            contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch (AddOutgoingMessageException | AbstractCommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     @Override

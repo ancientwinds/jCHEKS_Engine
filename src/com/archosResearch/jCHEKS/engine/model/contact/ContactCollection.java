@@ -15,9 +15,9 @@ public class ContactCollection{
         this.contacts = new HashSet();
     }
 
-    public Contact findByReceiverSystemId(String receiverSystemId) throws ContactNotFoundException{
+    public Contact findByUniqueId(String uniqueId) throws ContactNotFoundException{
        for (Contact contact : this.contacts) {
-            if (contact.getReceiverChaoticSystemId().equals(receiverSystemId)) {
+            if (contact.getContactInfo().getUniqueId().equals(uniqueId)) {
                 return contact;
             }
         }
@@ -26,7 +26,7 @@ public class ContactCollection{
     
     public Contact findByName(String name) throws ContactNotFoundException {
         for (Contact contact : this.contacts) {
-            if (contact.getName().equals(name)) {
+            if (contact.getContactInfo().getName().equals(name)) {
                 return contact;
             }
         }
@@ -35,7 +35,7 @@ public class ContactCollection{
 
     public void add(Contact newContact) throws ContactAlreadyExistException {
         for (Contact contact : this.contacts) {
-            if (contact.getName().equals(newContact.getName())) {
+            if (contact.getContactInfo().getName().equals(newContact.getContactInfo().getName())) {
                 throw new ContactAlreadyExistException("Contact already exist in this contact collection.");
             }
         }
