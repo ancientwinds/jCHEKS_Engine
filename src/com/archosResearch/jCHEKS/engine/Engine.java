@@ -56,10 +56,15 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     }
     
-    public void createContact(String contactName, String remoteIp, String sendingPort, String receivingPort){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(sendingPort)), TCPReceiver.getInstance(Integer.parseInt(receivingPort)));          
+    public void createContact(String contactName, String remoteIp, int sendingPort){
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, sendingPort), TCPReceiver.getInstance(), contactName/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
         Contact contact = new Contact(contactName, communicator, UUID.randomUUID().toString());
+        try {
+            model.addContact(contact);
+        } catch (ContactAlreadyExistException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public static void main(String args[]) throws ContactAlreadyExistException{
@@ -79,6 +84,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+
+    @Override
+    public void setReceivingPort(int port) {
+        TCPReceiver.getInstance(port);
     }
 
 }
