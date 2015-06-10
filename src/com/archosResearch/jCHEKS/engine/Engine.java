@@ -79,7 +79,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addOutgoingMessage(messageContent, contactName);
             
             //TODO: Do not respect Law of Demeter or find a better name for contact.
-            this.model.findContactByName(contactName).getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", "systemId"));
+            this.model.findContactByName(contactName).getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contactName));
         } catch (AddOutgoingMessageException | AbstractCommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
