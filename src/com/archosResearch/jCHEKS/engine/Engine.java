@@ -56,7 +56,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     }
     
-    public void addContact(String contactName, String remoteIp, String sendingPort, String receivingPort){
+    public void createContact(String contactName, String remoteIp, String sendingPort, String receivingPort){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, Integer.parseInt(sendingPort)), TCPReceiver.getInstance(Integer.parseInt(receivingPort)));          
         communicator.addObserver(this);
         Contact contact = new Contact(contactName, communicator, UUID.randomUUID().toString());
