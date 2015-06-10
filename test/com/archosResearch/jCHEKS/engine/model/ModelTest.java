@@ -23,7 +23,7 @@ public class ModelTest {
 
     @Test
     public void addContact_should_notify_observer_that_a_contact_has_been_added() throws ContactAlreadyExistException{
-        Contact contact = new Contact("Alice", new StubCommunicator());
+        Contact contact = new Contact("Alice", new StubCommunicator(), "id");
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
         model.addObserver(observer);
@@ -33,7 +33,7 @@ public class ModelTest {
 
     @Test (expected = ContactAlreadyExistException.class)
     public void addContact_should_throw_an_exception_if_contact_already_exist() throws ContactAlreadyExistException{
-        Contact contact = new Contact("Alice", new StubCommunicator());
+        Contact contact = new Contact("Alice", new StubCommunicator(), "id");
         Model model = new Model();
         model.addContact(contact);
         model.addContact(contact);
@@ -45,7 +45,7 @@ public class ModelTest {
         String contactName = "Alice";
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
-        model.addContact(new Contact(contactName, new StubCommunicator()));
+        model.addContact(new Contact(contactName, new StubCommunicator(), "id"));
         model.addObserver(observer);
         model.addOutgoingMessage(messageContent, contactName);
         assertEquals(messageContent, observer.lastMessageSent.getContent());
@@ -61,7 +61,7 @@ public class ModelTest {
     public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException, AddIncomingMessageException {
         String messageContent = "Hello";
         String contactName = "Alice";
-        Contact contact = new Contact(contactName, new StubCommunicator());
+        Contact contact = new Contact(contactName, new StubCommunicator(), "id");
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
         model.addContact(contact);
@@ -73,7 +73,7 @@ public class ModelTest {
     @Test (expected = AddIncomingMessageException.class)
     public void addIncomingMessage_should_throw_AddIncomingMessageException_if_contact_related_to_message_not_exist() throws ContactAlreadyExistException, AddIncomingMessageException {
         Model model = new Model();
-        model.addIncomingMessage("Hello", new Contact("Alice", new StubCommunicator()));
+        model.addIncomingMessage("Hello", new Contact("Alice", new StubCommunicator(), "id"));
     }
     
 }

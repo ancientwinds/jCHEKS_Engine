@@ -28,7 +28,7 @@ public class EngineTest {
         StubCommunicator communicator = new StubCommunicator();
         StubModel model = new StubModel();
         StubIOManager ioManager = new StubIOManager();
-        engine = new Engine(communicator, model, ioManager, "Alice");
+        engine = new Engine(model, ioManager);
         assertNotNull(engine);
     }
     
@@ -37,7 +37,7 @@ public class EngineTest {
         StubCommunicator communicator = new StubCommunicator();
         StubModel model = new StubModel();
         StubIOManager ioManager = new StubIOManager();
-        Engine engine = new Engine(communicator, model, ioManager, "Alice");
+        Engine engine = new Engine(model, ioManager);
         engine.ackReceived();
     }
 
@@ -46,7 +46,7 @@ public class EngineTest {
         AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new StubModel();
         InputOutputManager ioManager = new StubIOManager();
-        Engine engine = new Engine(communicator, model, ioManager, "Alice");
+        Engine engine = new Engine(model, ioManager);
         AbstractCommunication communication = new Communication("cipher","cipherCheck","sysId");
         engine.communicationReceived(communication);
     }
@@ -56,7 +56,7 @@ public class EngineTest {
         AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new ModelExceptionThrower();
         InputOutputManager ioManager = new StubIOManager();
-        Engine engine = new Engine(communicator, model, ioManager, "Alice");
+        Engine engine = new Engine(model, ioManager);
         AbstractCommunication communication = new Communication("cipher","cipherCheck","sysId");
         engine.communicationReceived(communication);
     }
@@ -66,7 +66,7 @@ public class EngineTest {
         AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new StubModel();
         InputOutputManager ioManager = new StubIOManager();
-        Engine engine = new Engine(communicator, model, ioManager, "Alice");
+        Engine engine = new Engine(model, ioManager);
         engine.handleOutgoingMessage("Message content", "Alice");
     }
     
@@ -75,7 +75,7 @@ public class EngineTest {
         AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new ModelExceptionThrower();
         InputOutputManager ioManager = new StubIOManager();
-        Engine engine = new Engine(communicator, model, ioManager, "Alice");
+        Engine engine = new Engine(model, ioManager);
         engine.handleOutgoingMessage("Message content", "Alice");
     }
     

@@ -14,14 +14,14 @@ public class ContactTest {
     @Test
     public void constructor_should_create_the_contact() {
         Contact contact = null;
-        contact = new Contact("", new StubCommunicator());
+        contact = new Contact("", new StubCommunicator(), "id");
         assertNotNull(contact);
     }
     
     @Test
     public void getName_should_return_the_name_of_the_contact() {
         String expName = "Alice";
-        Contact contact = new Contact(expName, new StubCommunicator());
+        Contact contact = new Contact(expName, new StubCommunicator(), "id");
         String result = contact.getName();
         assertEquals(expName, result);
     }
@@ -29,7 +29,7 @@ public class ContactTest {
     @Test
     public void getCommunicator_should_return_the_communicator_of_the_contact() {
         AbstractCommunicator givenCommunicator = new StubCommunicator();
-        Contact contact = new Contact("Alice", givenCommunicator);
+        Contact contact = new Contact("Alice", givenCommunicator, "id");
         AbstractCommunicator receivedCommunicator = contact.getCommunicator();
         assertEquals(givenCommunicator, receivedCommunicator);
     }
