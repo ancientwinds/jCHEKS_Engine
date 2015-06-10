@@ -56,10 +56,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     }
     
-    public void createContact(String contactName, String remoteIp, int sendingPort){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, sendingPort), TCPReceiver.getInstance(), contactName/*Maybe system id or something else, used as unique id.*/);          
+    public void createContact(String contactName, String remoteIp, int sendingPort, String uniqueId){
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(remoteIp, sendingPort), TCPReceiver.getInstance(), uniqueId/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
-        Contact contact = new Contact(contactName, communicator, UUID.randomUUID().toString());
+        Contact contact = new Contact(contactName, communicator, uniqueId);
         try {
             model.addContact(contact);
         } catch (ContactAlreadyExistException ex) {
@@ -79,7 +79,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addOutgoingMessage(messageContent, contactName);
             
             //TODO: Do not respect Law of Demeter or find a better name for contact.
-            this.model.findContactByName(contactName).getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contactName));
+            Contact contact = this.model.findContactByName(contactName);
+            contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contact.getReceiverChaoticSystemId()));
         } catch (AddOutgoingMessageException | AbstractCommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
