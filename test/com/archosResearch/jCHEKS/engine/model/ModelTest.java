@@ -47,6 +47,7 @@ public class ModelTest {
         String messageContent = "Hello";
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
+        model.addContact(new Contact(aliceContactInfo, new StubCommunicator()));
         model.addObserver(observer);
         model.addOutgoingMessage(messageContent, aliceContactInfo.getName());
         assertEquals(messageContent, observer.lastMessageSent.getContent());
