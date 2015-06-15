@@ -8,7 +8,8 @@ import java.util.HashSet;
  * @author Michael Roussel <rousselm4@gmail.com>
  */
 public class ContactCollection{
-
+    //TODO 2 HashMap <String,Contact> one for each findBy
+    //TODO Synchronized or not
     private final HashSet<Contact> contacts;
 
     public ContactCollection() {
@@ -16,6 +17,7 @@ public class ContactCollection{
     }
 
     public Contact findByUniqueId(String uniqueId) throws ContactNotFoundException{
+        
        for (Contact contact : this.contacts) {
             if (contact.getContactInfo().getUniqueId().equals(uniqueId)) {
                 return contact;
@@ -34,6 +36,7 @@ public class ContactCollection{
     }
 
     public void add(Contact newContact) throws ContactAlreadyExistException {
+        //TODO Check in both map if the contact exist,
         for (Contact contact : this.contacts) {
             if (contact.getContactInfo().getName().equals(newContact.getContactInfo().getName())) {
                 throw new ContactAlreadyExistException("Contact already exist in this contact collection.");

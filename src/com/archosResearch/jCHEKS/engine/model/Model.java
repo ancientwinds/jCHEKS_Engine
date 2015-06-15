@@ -16,7 +16,7 @@ public class Model extends AbstractModel {
 
     private final ContactCollection contactCollection;
     private final HashMap<Contact, HashSet<AbstractMessage>> messages;
-
+    //TODO Do we need to keep the messages^
     public Model() {
         this.contactCollection = new ContactCollection();
         this.messages = new HashMap();

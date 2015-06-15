@@ -9,7 +9,7 @@ import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyEx
 import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.communicator.*;
-import com.archosResearch.jCHEKS.concept.exception.AbstractCommunicatorException;
+import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 import java.util.logging.*;
@@ -78,10 +78,9 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         try {
             this.model.addOutgoingMessage(messageContent, contactName);
             
-            //TODO: Do not respect Law of Demeter or find a better name for contact.
             Contact contact = this.model.findContactByName(contactName);
             contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contact.getContactInfo().getUniqueId()));
-        } catch (AddOutgoingMessageException | AbstractCommunicatorException | ContactNotFoundException ex) {
+        } catch (AddOutgoingMessageException | CommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

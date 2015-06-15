@@ -1,5 +1,6 @@
 package com.archosResearch.jCHEKS.engine.model;
 
+import com.archosResearch.jCHEKS.concept.ioManager.ContactInfo;
 import com.archosResearch.jCHEKS.engine.mock.ObserverMock;
 import com.archosResearch.jCHEKS.engine.mock.StubCommunicator;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
@@ -14,6 +15,8 @@ import static org.junit.Assert.*;
  */
 public class ModelTest {
     
+    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "sysId");
+    
     @Test
     public void constructor_should_create_the_model(){
         AbstractModel model = null;
@@ -23,17 +26,17 @@ public class ModelTest {
 
     @Test
     public void addContact_should_notify_observer_that_a_contact_has_been_added() throws ContactAlreadyExistException{
-        Contact contact = new Contact("Alice", new StubCommunicator(), "id");
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
         model.addObserver(observer);
         model.addContact(contact);
-        assertEquals(contact.getName(), observer.lastContactAdded);
+        assertEquals(contact.getContactInfo().getName(), observer.lastContactAdded);
     }
 
     @Test (expected = ContactAlreadyExistException.class)
     public void addContact_should_throw_an_exception_if_contact_already_exist() throws ContactAlreadyExistException{
-        Contact contact = new Contact("Alice", new StubCommunicator(), "id");
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
         Model model = new Model();
         model.addContact(contact);
         model.addContact(contact);
@@ -42,12 +45,10 @@ public class ModelTest {
     @Test
     public void addOutgoingMessage_should_notify_observer_that_a_message_has_been_sent() throws AddOutgoingMessageException, ContactAlreadyExistException {
         String messageContent = "Hello";
-        String contactName = "Alice";
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
-        model.addContact(new Contact(contactName, new StubCommunicator(), "id"));
         model.addObserver(observer);
-        model.addOutgoingMessage(messageContent, contactName);
+        model.addOutgoingMessage(messageContent, aliceContactInfo.getName());
         assertEquals(messageContent, observer.lastMessageSent.getContent());
     }
 
@@ -60,8 +61,7 @@ public class ModelTest {
     @Test
     public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException, AddIncomingMessageException {
         String messageContent = "Hello";
-        String contactName = "Alice";
-        Contact contact = new Contact(contactName, new StubCommunicator(), "id");
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
         model.addContact(contact);
@@ -73,7 +73,7 @@ public class ModelTest {
     @Test (expected = AddIncomingMessageException.class)
     public void addIncomingMessage_should_throw_AddIncomingMessageException_if_contact_related_to_message_not_exist() throws ContactAlreadyExistException, AddIncomingMessageException {
         Model model = new Model();
-        model.addIncomingMessage("Hello", new Contact("Alice", new StubCommunicator(), "id"));
+        model.addIncomingMessage("Hello", new Contact(aliceContactInfo, new StubCommunicator()));
     }
     
 }
