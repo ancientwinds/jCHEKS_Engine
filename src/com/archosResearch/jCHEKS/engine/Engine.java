@@ -65,6 +65,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
             MockCS cs = new MockCS();
+            cs.temp();
             String decryptedMessage = new String(contact.getEncrypter().decrypt(communication.getCipher().getBytes(), cs));
             
             this.model.addIncomingMessage(decryptedMessage, contact); 
@@ -102,6 +103,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             Contact contact = this.model.findContactByName(contactName);
             MockCS cs = new MockCS();
+            cs.temp();
             String encryptedMessage = new String(contact.getEncrypter().encrypt(messageContent.getBytes(), cs));
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch (AddOutgoingMessageException | CommunicatorException | ContactNotFoundException ex) {
