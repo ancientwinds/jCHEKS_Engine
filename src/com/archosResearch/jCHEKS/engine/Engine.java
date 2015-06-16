@@ -104,7 +104,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             cs.temp();
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, cs);
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
-        } catch (AddOutgoingMessageException | CommunicatorException | ContactNotFoundException ex) {
+        } catch ( CommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
