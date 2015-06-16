@@ -2,7 +2,6 @@ package com.archosResearch.jCHEKS.engine.model.contact;
 
 import com.archosResearch.jCHEKS.engine.model.contact.exception.*;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  *
@@ -27,12 +26,12 @@ public class ContactCollection{
     public Contact findByName(String name) throws ContactNotFoundException {
         Contact contactFound = names.get(name);
         if(contactFound != null)return contactFound;
-        
         throw new ContactNotFoundException("Contact with this name doesn't exist in this contact collection.");
     }
 
     public void add(Contact newContact) throws ContactAlreadyExistException {
-        this.names.get(newContact.getContactInfo().getName());
+        if(this.names.get(newContact.getContactInfo().getName()) != null) throw new ContactAlreadyExistException("Contact with this name already exist");
+        if(this.uniqueIds.get(newContact.getContactInfo().getUniqueId()) != null) throw new ContactAlreadyExistException("Contact with this uniqueId already exist");
         this.names.put(newContact.getContactInfo().getName(), newContact);
         this.uniqueIds.put(newContact.getContactInfo().getUniqueId(), newContact);
     }
