@@ -5,7 +5,6 @@ import com.archosResearch.jCHEKS.engine.mock.ObserverMock;
 import com.archosResearch.jCHEKS.engine.mock.StubCommunicator;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
-import com.archosResearch.jCHEKS.engine.model.exception.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -43,7 +42,7 @@ public class ModelTest {
     }
     
     @Test
-    public void addOutgoingMessage_should_notify_observer_that_a_message_has_been_sent() throws AddOutgoingMessageException, ContactAlreadyExistException {
+    public void addOutgoingMessage_should_notify_observer_that_a_message_has_been_sent() throws ContactAlreadyExistException {
         String messageContent = "Hello";
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
@@ -52,15 +51,9 @@ public class ModelTest {
         model.addOutgoingMessage(messageContent, aliceContactInfo.getName());
         assertEquals(messageContent, observer.lastMessageSent.getContent());
     }
-
-    @Test (expected = AddOutgoingMessageException.class)
-    public void addOutgoingMessage_should_throw_AddOutgoingMessageException_if_contact_related_to_message_not_exist() throws AddOutgoingMessageException, ContactAlreadyExistException {
-        Model model = new Model();
-        model.addOutgoingMessage("Hello", "Alice");
-    }
     
     @Test
-    public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException, AddIncomingMessageException {
+    public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException {
         String messageContent = "Hello";
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
         Model model = new Model();
@@ -69,12 +62,6 @@ public class ModelTest {
         model.addObserver(observer);
         model.addIncomingMessage(messageContent, contact);
         assertEquals(messageContent, observer.lastMessageReceived.getContent());
-    }
-
-    @Test (expected = AddIncomingMessageException.class)
-    public void addIncomingMessage_should_throw_AddIncomingMessageException_if_contact_related_to_message_not_exist() throws ContactAlreadyExistException, AddIncomingMessageException {
-        Model model = new Model();
-        model.addIncomingMessage("Hello", new Contact(aliceContactInfo, new StubCommunicator()));
     }
     
 }

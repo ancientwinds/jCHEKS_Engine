@@ -5,29 +5,25 @@ import com.archosResearch.jCHEKS.engine.model.AbstractModel;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
-import com.archosResearch.jCHEKS.engine.model.exception.*;
+
 
 /**
  *
  * @author Michael Roussel <rousselm4@gmail.com>
  */
-public class ModelExceptionThrower extends AbstractModel {
+public class ModelContactNotFoundExceptionThrower extends AbstractModel {
 
-    public ModelExceptionThrower() {
+    public ModelContactNotFoundExceptionThrower() {
     }
 
     @Override
     public void addContact(Contact contact) throws ContactAlreadyExistException {}
 
     @Override
-    public void addIncomingMessage(String messageContent, Contact contact) throws AddIncomingMessageException {
-        throw new AddIncomingMessageException("AddIncomingMessageException");
-    }
+    public void addIncomingMessage(String messageContent, Contact contact){}
 
     @Override
-    public void addOutgoingMessage(String messageContent, String contactName) throws AddOutgoingMessageException {
-        throw new AddOutgoingMessageException("AddOutgoingMessageException");
-    }
+    public void addOutgoingMessage(String messageContent, String contactName){}
 
     @Override
     public Contact findContactByReceiverSystemId(String receiverSystemId) throws ContactNotFoundException {return null;}

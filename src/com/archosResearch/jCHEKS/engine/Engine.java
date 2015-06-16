@@ -6,16 +6,13 @@ import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
 import com.archosResearch.jCHEKS.engine.model.*;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
-import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.communicator.*;
-import com.archosResearch.jCHEKS.concept.engine.message.AbstractMessage;
-import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
+import com.archosResearch.jCHEKS.concept.engine.message.*;
 import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 import java.util.logging.*;
-
 
 /**
  *
@@ -63,7 +60,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addIncomingMessage(communication.getCipher(), contact); 
             //TODO return something else.
             return "Testing secure ACK";
-        } catch (AddIncomingMessageException | ContactNotFoundException ex) {
+        } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -72,10 +69,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     @Override
     public void createContact(ContactInfo contactInfo){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
-        communicator.addObserver(this);
-        Contact contact = new Contact(contactInfo, communicator);
         try {
+            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
+            communicator.addObserver(this);
+            Contact contact = new Contact(contactInfo, communicator);
             model.addContact(contact);
         } catch (ContactAlreadyExistException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,7 +92,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             Contact contact = this.model.findContactByName(contactName);
             contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contact.getContactInfo().getUniqueId()));
-        } catch (AddOutgoingMessageException | CommunicatorException | ContactNotFoundException ex) {
+        } catch (CommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

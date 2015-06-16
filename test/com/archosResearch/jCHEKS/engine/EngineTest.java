@@ -1,6 +1,6 @@
 package com.archosResearch.jCHEKS.engine;
 
-import com.archosResearch.jCHEKS.engine.mock.ModelExceptionThrower;
+import com.archosResearch.jCHEKS.engine.mock.ModelContactNotFoundExceptionThrower;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunication;
 import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
@@ -50,7 +50,7 @@ public class EngineTest {
     
     @Test
     public void communicationReceived_should_catch_AddIncomingMessageException_if_thrown() throws ContactAlreadyExistException {
-        AbstractModel model = new ModelExceptionThrower();
+        AbstractModel model = new ModelContactNotFoundExceptionThrower();
         InputOutputManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);
         AbstractCommunication communication = new Communication("cipher","cipherCheck","sysId");
@@ -67,7 +67,7 @@ public class EngineTest {
     
     @Test
     public void handleOutgoingMessage_should_catch_Exceptions() throws ContactAlreadyExistException {
-        AbstractModel model = new ModelExceptionThrower();
+        AbstractModel model = new ModelContactNotFoundExceptionThrower();
         InputOutputManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);
         engine.handleOutgoingMessage("Message content", "Alice");

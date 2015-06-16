@@ -5,7 +5,6 @@ import com.archosResearch.jCHEKS.engine.model.AbstractModel;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
-import com.archosResearch.jCHEKS.engine.model.exception.*;
 
 /**
  *
@@ -17,10 +16,10 @@ public class StubModel extends AbstractModel{
     public void addContact(Contact contact) throws ContactAlreadyExistException {}
 
     @Override
-    public void addIncomingMessage(String messageContent, Contact contact) throws AddIncomingMessageException {}
+    public void addIncomingMessage(String messageContent, Contact contact) {}
 
     @Override
-    public void addOutgoingMessage(String messageContent, String contactName) throws AddOutgoingMessageException {}
+    public void addOutgoingMessage(String messageContent, String contactName) {}
 
     @Override
     public Contact findContactByReceiverSystemId(String receiverSystemId) throws ContactNotFoundException {

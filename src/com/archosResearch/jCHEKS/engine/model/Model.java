@@ -1,6 +1,5 @@
 package com.archosResearch.jCHEKS.engine.model;
 
-import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.*;
 import com.archosResearch.jCHEKS.engine.model.contact.*;
 import com.archosResearch.jCHEKS.concept.engine.message.*;
@@ -27,15 +26,14 @@ public class Model extends AbstractModel {
     }
 
     @Override
-    public void addOutgoingMessage(String messageContent, String contactName) throws AddOutgoingMessageException {
+    public void addOutgoingMessage(String messageContent, String contactName){
         OutgoingMessage message = new OutgoingMessage(messageContent);
         lastMessageSent.put(contactName, message);
         this.notifyMessageSent(message, contactName);
-
     }
 
     @Override
-    public void addIncomingMessage(String messageContent, Contact contact) throws AddIncomingMessageException {
+    public void addIncomingMessage(String messageContent, Contact contact){
         IncomingMessage message = new IncomingMessage(messageContent);
         this.notifyMessageReceived(message, contact.getContactInfo().getName());
     }
