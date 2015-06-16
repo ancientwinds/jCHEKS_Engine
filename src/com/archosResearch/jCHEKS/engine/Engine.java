@@ -13,8 +13,12 @@ import com.archosResearch.jCHEKS.concept.engine.message.AbstractMessage;
 import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
 import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
+import com.archosResearch.jCHEKS.encrypter.MockCS;
+import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.*;
+import javax.crypto.NoSuchPaddingException;
 
 
 /**
@@ -60,32 +64,35 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public String communicationReceived(AbstractCommunication communication) {
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
-            this.model.addIncomingMessage(communication.getCipher(), contact); 
+            MockCS cs = new MockCS();
+            String decryptedMessage = new String(contact.getEncrypter().decrypt(communication.getCipher().getBytes(), cs));
+            
+            this.model.addIncomingMessage(decryptedMessage, contact); 
             //TODO return something else.
             return "Testing secure ACK";
         } catch (AddIncomingMessageException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-
     }
     
     @Override
     public void createContact(ContactInfo contactInfo){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
-        Contact contact = new Contact(contactInfo, communicator);
+        
+        Contact contact;
         try {
-            model.addContact(contact);
-        } catch (ContactAlreadyExistException ex) {
+            contact = new Contact(contactInfo, communicator, new RijndaelEncrypter());
+            try {
+                model.addContact(contact);
+            } catch (ContactAlreadyExistException ex) {
+                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public static void main(String args[]) throws ContactAlreadyExistException{
-        AbstractModel model = new Model();
-        InputOutputManager ioManager = JavaFxViewController.getInstance();
-        new Engine(model, ioManager);
+        
     }
     
     @Override
@@ -94,7 +101,9 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addOutgoingMessage(messageContent, contactName);
             
             Contact contact = this.model.findContactByName(contactName);
-            contact.getCommunicator().sendCommunication(new Communication(messageContent, "chipherCheck", contact.getContactInfo().getUniqueId()));
+            MockCS cs = new MockCS();
+            String encryptedMessage = new String(contact.getEncrypter().encrypt(messageContent.getBytes(), cs));
+            contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch (AddOutgoingMessageException | CommunicatorException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -104,5 +113,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void setReceivingPort(int port) {
         TCPReceiver.getInstance(port);
     }
-
+    
+    public static void main(String args[]) throws ContactAlreadyExistException{
+        AbstractModel model = new Model();
+        InputOutputManager ioManager = JavaFxViewController.getInstance();
+        new Engine(model, ioManager);
+    }
 }
