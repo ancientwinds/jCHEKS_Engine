@@ -3,6 +3,7 @@ package com.archosResearch.jCHEKS.engine.model;
 import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import com.archosResearch.jCHEKS.concept.engine.ModelObservable;
+import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 
@@ -22,4 +23,5 @@ public abstract class AbstractModel extends ModelObservable {
 
     public abstract Contact findContactByName(String name)  throws ContactNotFoundException;
 
+    public abstract OutgoingMessage getLastOutgoingMessageBySystemId(String contactName) throws ContactNotFoundException;
 }

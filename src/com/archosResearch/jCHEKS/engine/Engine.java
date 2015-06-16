@@ -9,6 +9,8 @@ import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyEx
 import com.archosResearch.jCHEKS.engine.model.exception.*;
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.communicator.*;
+import com.archosResearch.jCHEKS.concept.engine.message.AbstractMessage;
+import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
 import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
@@ -21,23 +23,37 @@ import java.util.logging.*;
  */
 public class Engine extends AbstractEngine  implements CommunicatorObserver{
     private final AbstractModel model;
+    private final InputOutputManager ioManager;
         
     public Engine(AbstractModel model, InputOutputManager ioManager) throws ContactAlreadyExistException{
             this.model = model;
             this.model.addObserver(ioManager);
+            this.ioManager = ioManager;
             ioManager.setEngine(this);
     }
     
     @Override
-    public void ackReceived() {
-        //TODO ... Update state of message.
-        System.out.println("Ack received!!!");
+    public void ackReceived(AbstractCommunication communication) {
+        try {
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            message.updateState(AbstractMessage.State.WAITING_FOR_SECURE_ACK);
+            this.ioManager.refresh();
+            System.out.println("Ack received!!!");
+        } catch (ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
-    public void secureAckReceived() {
-        //TODO ... Update state of message.
-        System.out.println("Secure Ack received!!!");
+    public void secureAckReceived(AbstractCommunication communication) {
+        try {
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            message.updateState(AbstractMessage.State.OK);
+            this.ioManager.refresh();
+            System.out.println("Secure Ack received!!!");
+        } catch (ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -49,7 +65,6 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             return "Testing secure ACK";
         } catch (AddIncomingMessageException | ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-            //TODO Better handling of exceptions.
         }
         return null;
 

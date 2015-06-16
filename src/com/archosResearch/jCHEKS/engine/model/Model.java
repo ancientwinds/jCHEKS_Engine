@@ -16,10 +16,13 @@ public class Model extends AbstractModel {
 
     private final ContactCollection contactCollection;
     private final HashMap<Contact, HashSet<AbstractMessage>> messages;
-    //TODO Do we need to keep the messages^
+    private final HashMap<String, OutgoingMessage> lastMessageSent;
+    //TODO Do we need to keep the messages?
+    
     public Model() {
         this.contactCollection = new ContactCollection();
         this.messages = new HashMap();
+        this.lastMessageSent = new HashMap();
     }
 
     @Override
@@ -34,6 +37,7 @@ public class Model extends AbstractModel {
         OutgoingMessage message = new OutgoingMessage(messageContent);
         try {
             addMessageToContact(message, contactName);
+            lastMessageSent.put(contactName, message);
             this.notifyMessageSent(message, contactName);
         } catch (AddMessageException ex) {
             throw new AddOutgoingMessageException("Unable to add outgoing message.", ex);
@@ -60,7 +64,13 @@ public class Model extends AbstractModel {
             throw new AddMessageException("Unable to add message.", ex);
         }
     }
-
+    
+    @Override
+    public OutgoingMessage getLastOutgoingMessageBySystemId(String systemId) throws ContactNotFoundException{
+        Contact contact = this.findContactByReceiverSystemId(systemId);
+        return lastMessageSent.get(contact.getContactInfo().getName());
+    }
+    
     private void addMessage(AbstractMessage message, Contact contact) {
         HashSet contactMessages = this.messages.get(contact);
         contactMessages.add(message);
