@@ -3,6 +3,7 @@ package com.archosResearch.jCHEKS.engine.model.contact;
 import com.archosResearch.jCHEKS.engine.mock.StubCommunicator;
 import com.archosResearch.jCHEKS.concept.communicator.AbstractCommunicator;
 import com.archosResearch.jCHEKS.concept.ioManager.ContactInfo;
+import com.archosResearch.jCHEKS.engine.mock.StubEncrypter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -17,13 +18,13 @@ public class ContactTest {
     @Test
     public void constructor_should_create_the_contact() {
         Contact contact = null;
-        contact = new Contact(aliceContactInfo, new StubCommunicator());
+        contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter());
         assertNotNull(contact);
     }
     
     @Test
     public void getName_should_return_the_name_of_the_contact() {
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter());
         String result = contact.getContactInfo().getName();
         assertEquals(contactName, result);
     }
@@ -31,7 +32,7 @@ public class ContactTest {
     @Test
     public void getCommunicator_should_return_the_communicator_of_the_contact() {
         AbstractCommunicator givenCommunicator = new StubCommunicator();
-        Contact contact = new Contact(aliceContactInfo, givenCommunicator);
+        Contact contact = new Contact(aliceContactInfo, givenCommunicator, new StubEncrypter());
         AbstractCommunicator receivedCommunicator = contact.getCommunicator();
         assertEquals(givenCommunicator, receivedCommunicator);
     }

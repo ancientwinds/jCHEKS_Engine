@@ -3,6 +3,7 @@ package com.archosResearch.jCHEKS.engine.model;
 import com.archosResearch.jCHEKS.concept.ioManager.ContactInfo;
 import com.archosResearch.jCHEKS.engine.mock.ObserverMock;
 import com.archosResearch.jCHEKS.engine.mock.StubCommunicator;
+import com.archosResearch.jCHEKS.engine.mock.StubEncrypter;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class ModelTest {
 
     @Test
     public void addContact_should_notify_observer_that_a_contact_has_been_added() throws ContactAlreadyExistException{
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter());
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
         model.addObserver(observer);
@@ -35,7 +36,7 @@ public class ModelTest {
 
     @Test (expected = ContactAlreadyExistException.class)
     public void addContact_should_throw_an_exception_if_contact_already_exist() throws ContactAlreadyExistException{
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter());
         Model model = new Model();
         model.addContact(contact);
         model.addContact(contact);
@@ -46,7 +47,7 @@ public class ModelTest {
         String messageContent = "Hello";
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
-        model.addContact(new Contact(aliceContactInfo, new StubCommunicator()));
+        model.addContact(new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter()));
         model.addObserver(observer);
         model.addOutgoingMessage(messageContent, aliceContactInfo.getName());
         assertEquals(messageContent, observer.lastMessageSent.getContent());
@@ -55,7 +56,7 @@ public class ModelTest {
     @Test
     public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException {
         String messageContent = "Hello";
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator());
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter());
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
         model.addContact(contact);
