@@ -24,5 +24,8 @@ public class StubIOManager implements InputOutputManager{
 
     @Override
     public void contactAdded(String contactName) {}
+
+    @Override
+    public void refresh() {}
     
 }

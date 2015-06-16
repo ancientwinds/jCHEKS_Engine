@@ -25,7 +25,6 @@ public class EngineTest {
     @Test
     public void constructor_should_construct_the_engine() throws ContactAlreadyExistException {
         Engine engine = null;
-        StubCommunicator communicator = new StubCommunicator();
         StubModel model = new StubModel();
         StubIOManager ioManager = new StubIOManager();
         engine = new Engine(model, ioManager);
@@ -34,16 +33,14 @@ public class EngineTest {
     
     @Test
     public void testAckReceived() throws ContactAlreadyExistException {
-        StubCommunicator communicator = new StubCommunicator();
         StubModel model = new StubModel();
         StubIOManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);
-        engine.ackReceived();
+        engine.ackReceived(new Communication("", "", ""));
     }
 
     @Test
     public void communicationReceived_should_not_cause_any_error_with_stub() throws ContactAlreadyExistException {
-        AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new StubModel();
         InputOutputManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);
@@ -53,7 +50,6 @@ public class EngineTest {
     
     @Test
     public void communicationReceived_should_catch_AddIncomingMessageException_if_thrown() throws ContactAlreadyExistException {
-        AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new ModelExceptionThrower();
         InputOutputManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);
@@ -63,7 +59,6 @@ public class EngineTest {
 
     @Test
     public void handleOutgoingMessage_should_not_cause_any_error_with_stub() throws ContactAlreadyExistException {
-        AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new StubModel();
         InputOutputManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);
@@ -72,7 +67,6 @@ public class EngineTest {
     
     @Test
     public void handleOutgoingMessage_should_catch_Exceptions() throws ContactAlreadyExistException {
-        AbstractCommunicator communicator = new StubCommunicator();
         AbstractModel model = new ModelExceptionThrower();
         InputOutputManager ioManager = new StubIOManager();
         Engine engine = new Engine(model, ioManager);

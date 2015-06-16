@@ -1,5 +1,6 @@
 package com.archosResearch.jCHEKS.engine.mock;
 
+import com.archosResearch.jCHEKS.concept.engine.message.OutgoingMessage;
 import com.archosResearch.jCHEKS.engine.model.AbstractModel;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
@@ -33,5 +34,8 @@ public class ModelExceptionThrower extends AbstractModel {
 
     @Override
     public Contact findContactByName(String name) throws ContactNotFoundException {return null;}
+
+    @Override
+    public OutgoingMessage getLastOutgoingMessageBySystemId(String contactName) throws ContactNotFoundException {return null;}
     
 }
