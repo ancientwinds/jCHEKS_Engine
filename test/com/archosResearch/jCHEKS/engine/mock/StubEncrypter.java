@@ -15,13 +15,9 @@ import com.archosResearch.jCHEKS.concept.encrypter.AbstractEncrypter;
 public class StubEncrypter extends AbstractEncrypter{
 
     @Override
-    public byte[] encrypt(byte[] text, AbstractChaoticSystem chaoticSystem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public String encrypt(String text, AbstractChaoticSystem chaoticSystem) {return "encrypted";}
 
     @Override
-    public byte[] decrypt(byte[] text, AbstractChaoticSystem chaoticSystem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public String decrypt(String text, AbstractChaoticSystem chaoticSystem) {return "decrypted";}
     
 }
