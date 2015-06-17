@@ -10,6 +10,7 @@ import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.communicator.*;
 import com.archosResearch.jCHEKS.concept.engine.message.*;
 import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
+import com.archosResearch.jCHEKS.concept.exception.EncrypterException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.encrypter.MockCS;
 import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
@@ -71,6 +72,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             return "Testing secure ACK";
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EncrypterException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -105,6 +108,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, new MockCS());
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch ( CommunicatorException | ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
