@@ -1,5 +1,6 @@
 package com.archosResearch.jCHEKS.engine;
 
+import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
@@ -12,7 +13,6 @@ import com.archosResearch.jCHEKS.concept.engine.message.*;
 import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.exception.EncrypterException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
-import com.archosResearch.jCHEKS.encrypter.MockCS;
 import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 import java.security.NoSuchAlgorithmException;
@@ -64,8 +64,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
             
-            //TODO Change MockCS
-            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), new MockCS());
+            ChaoticSystemMock tempChaotic = new ChaoticSystemMock();
+            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), tempChaotic);
             
             this.model.addIncomingMessage(decryptedMessage, contact); 
             //TODO return something else.
@@ -102,8 +102,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             Contact contact = this.model.findContactByName(contactName);
             
-            //TODO Change MockCS
-            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, new MockCS());
+            ChaoticSystemMock tempChaotic = new ChaoticSystemMock();
+            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, tempChaotic);
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
