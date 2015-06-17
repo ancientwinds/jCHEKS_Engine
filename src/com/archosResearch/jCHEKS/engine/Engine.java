@@ -43,6 +43,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             message.updateState(AbstractMessage.State.WAITING_FOR_SECURE_ACK);
             this.ioManager.refresh();
             System.out.println("Ack received!!!");
+
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,6 +56,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             message.updateState(AbstractMessage.State.OK);
             this.ioManager.refresh();
             System.out.println("Secure Ack received!!!");
+            Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
+            contact.getSendingChaoticSystem().Evolve();
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,10 +68,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
             
-            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), contact.getChaoticSystem());
+            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), contact.getReceivingChaoticSystem());
            
             this.model.addIncomingMessage(decryptedMessage, contact); 
             //TODO return something else.
+            contact.getReceivingChaoticSystem().Evolve();
             return "Testing secure ACK";
         } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,11 +87,16 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         
         Contact contact;
         try {
-            AbstractChaoticSystem chaoticSystem = new ChaoticSystemMock();
+            AbstractChaoticSystem sendingSystem = new ChaoticSystemMock();
             //TODO Change the type of system for the real one not the mock.
             //TODO Maybe change the key lenght
-            chaoticSystem.Generate(128);
-            contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), chaoticSystem);
+            sendingSystem.Generate(128);
+            
+            AbstractChaoticSystem receivingSystem = new ChaoticSystemMock();
+            //TODO Change the type of system for the real one not the mock.
+            //TODO Maybe change the key lenght
+            receivingSystem.Generate(128);
+            contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             try {
                 model.addContact(contact);
             } catch (ContactAlreadyExistException ex) {
@@ -108,7 +117,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             Contact contact = this.model.findContactByName(contactName);
             
-            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, contact.getChaoticSystem());
+            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, contact.getSendingChaoticSystem());
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);

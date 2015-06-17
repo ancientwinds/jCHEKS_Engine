@@ -14,12 +14,14 @@ public class Contact {
     private final AbstractCommunicator communicator;
     private final AbstractEncrypter encrypter;
     private final AbstractChaoticSystem chaoticSystem;
-
-    public Contact(ContactInfo contactInfo, AbstractCommunicator communicator, AbstractEncrypter encrypter, AbstractChaoticSystem chaoticSystem) {
+    private final AbstractChaoticSystem chaoticSystem2;
+    
+    public Contact(ContactInfo contactInfo, AbstractCommunicator communicator, AbstractEncrypter encrypter, AbstractChaoticSystem chaoticSystem, AbstractChaoticSystem chaoticSystem2) {
         this.contactInfo = contactInfo;
         this.communicator = communicator;
         this.encrypter = encrypter;
         this.chaoticSystem = chaoticSystem;
+        this.chaoticSystem2 = chaoticSystem2;
     }
 
     public ContactInfo getContactInfo() {
@@ -34,7 +36,11 @@ public class Contact {
         return this.encrypter;
     }
     
-    public AbstractChaoticSystem getChaoticSystem() {
+    public AbstractChaoticSystem getSendingChaoticSystem() {
         return this.chaoticSystem;
+    }
+    
+    public AbstractChaoticSystem getReceivingChaoticSystem() {
+        return this.chaoticSystem2;
     }
 }

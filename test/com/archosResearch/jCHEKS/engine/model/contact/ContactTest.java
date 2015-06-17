@@ -21,13 +21,13 @@ public class ContactTest {
     @Test
     public void constructor_should_create_the_contact() {
         Contact contact = null;
-        contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem());
+        contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         assertNotNull(contact);
     }
     
     @Test
     public void getName_should_return_the_name_of_the_contact() {
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem());
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         String result = contact.getContactInfo().getName();
         assertEquals(contactName, result);
     }
@@ -35,7 +35,7 @@ public class ContactTest {
     @Test
     public void getCommunicator_should_return_the_communicator_of_the_contact() {
         AbstractCommunicator givenCommunicator = new StubCommunicator();
-        Contact contact = new Contact(aliceContactInfo, givenCommunicator, new StubEncrypter(), new StubChaoticSystem());
+        Contact contact = new Contact(aliceContactInfo, givenCommunicator, new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         AbstractCommunicator receivedCommunicator = contact.getCommunicator();
         assertEquals(givenCommunicator, receivedCommunicator);
     }
@@ -43,16 +43,24 @@ public class ContactTest {
     @Test
     public void getEncrypter_should_return_the_encrypter_of_the_contact() {
         AbstractEncrypter givenEncrypter = new StubEncrypter();
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), givenEncrypter, new StubChaoticSystem());
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), givenEncrypter, new StubChaoticSystem(), new StubChaoticSystem());
         AbstractEncrypter receivedEncrypter = contact.getEncrypter();
         assertEquals(givenEncrypter, receivedEncrypter);
     }
     
     @Test
-    public void getChaoticSystem_should_return_the_chaoticSystem_of_the_contact() {
+    public void getSendingChaoticSystem_should_return_the_chaoticSystem_of_the_contact() {
         AbstractChaoticSystem givenChaoticSystem = new StubChaoticSystem();
-        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), givenChaoticSystem);
-        AbstractChaoticSystem receivedChaoticSystem = contact.getChaoticSystem();
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), givenChaoticSystem, new StubChaoticSystem());
+        AbstractChaoticSystem receivedChaoticSystem = contact.getSendingChaoticSystem();
+        assertEquals(givenChaoticSystem, receivedChaoticSystem);
+    }
+    
+    @Test
+    public void getReceivingChaoticSystem_should_return_the_chaoticSystem_of_the_contact() {
+        AbstractChaoticSystem givenChaoticSystem = new StubChaoticSystem();
+        Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), givenChaoticSystem);
+        AbstractChaoticSystem receivedChaoticSystem = contact.getReceivingChaoticSystem();
         assertEquals(givenChaoticSystem, receivedChaoticSystem);
     }
     
