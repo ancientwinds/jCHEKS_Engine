@@ -3,6 +3,7 @@ package com.archosResearch.jCHEKS.engine;
 import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
+import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
 import com.archosResearch.jCHEKS.concept.engine.AbstractEngine;
 import com.archosResearch.jCHEKS.engine.model.*;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
@@ -64,9 +65,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
             
-            ChaoticSystemMock tempChaotic = new ChaoticSystemMock();
-            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), tempChaotic);
-            
+            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), contact.getChaoticSystem());
+           
             this.model.addIncomingMessage(decryptedMessage, contact); 
             //TODO return something else.
             return "Testing secure ACK";
@@ -83,13 +83,19 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         
         Contact contact;
         try {
-            contact = new Contact(contactInfo, communicator, new RijndaelEncrypter());
+            AbstractChaoticSystem chaoticSystem = new ChaoticSystemMock();
+            //TODO Change the type of system for the real one not the mock.
+            //TODO Maybe change the key lenght
+            chaoticSystem.Generate(128);
+            contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), chaoticSystem);
             try {
                 model.addContact(contact);
             } catch (ContactAlreadyExistException ex) {
                 Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -102,8 +108,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             Contact contact = this.model.findContactByName(contactName);
             
-            ChaoticSystemMock tempChaotic = new ChaoticSystemMock();
-            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, tempChaotic);
+            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, contact.getChaoticSystem());
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
