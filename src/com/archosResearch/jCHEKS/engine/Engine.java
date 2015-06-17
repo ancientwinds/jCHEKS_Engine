@@ -70,9 +70,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addIncomingMessage(decryptedMessage, contact); 
             //TODO return something else.
             return "Testing secure ACK";
-        } catch (ContactNotFoundException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (EncrypterException ex) {
+        } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -107,9 +105,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             //TODO Change MockCS
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, new MockCS());
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
-        } catch ( CommunicatorException | ContactNotFoundException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (EncrypterException ex) {
+        } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
