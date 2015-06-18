@@ -57,7 +57,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.ioManager.refresh();
             System.out.println("Secure Ack received!!!");
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
-            contact.getSendingChaoticSystem().Evolve();
+            contact.getSendingChaoticSystem().evolveSystem();
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,7 +72,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
            
             this.model.addIncomingMessage(decryptedMessage, contact); 
             //TODO return something else.
-            contact.getReceivingChaoticSystem().Evolve();
+            contact.getReceivingChaoticSystem().evolveSystem();
             return "Testing secure ACK";
         } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,12 +124,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             AbstractChaoticSystem sendingSystem = new ChaoticSystemMock();
             //TODO Change the type of system for the real one not the mock.
             //TODO Maybe change the key lenght
-            sendingSystem.Generate(128);
             
             AbstractChaoticSystem receivingSystem = new ChaoticSystemMock();
             //TODO Change the type of system for the real one not the mock.
             //TODO Maybe change the key lenght
-            receivingSystem.Generate(128);
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             try {
                 model.addContact(contact);
