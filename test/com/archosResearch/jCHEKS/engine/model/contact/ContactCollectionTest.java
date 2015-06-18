@@ -24,7 +24,7 @@ public class ContactCollectionTest {
     }
 
     @Test(expected = ContactNotFoundException.class)
-    public void findByName_should_throw_an_exception_when_we_search_for_a_unexisting_contact() throws ContactNotFoundException, ContactAlreadyExistException {
+    public void findByName_should_throw_an_exception_when_we_search_for_a_unexisting_contact() throws ContactNotFoundException, ContactAlreadyExistException, Exception {
         ContactCollection contactCollection = new ContactCollection();
         contactCollection.add(new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem()));
         contactCollection.findByName("Bob");
@@ -37,7 +37,7 @@ public class ContactCollectionTest {
     }
 
     @Test
-    public void findByName_return_the_good_contact_it_is_possible() throws ContactNotFoundException, ContactAlreadyExistException {
+    public void findByName_return_the_good_contact_it_is_possible() throws ContactNotFoundException, ContactAlreadyExistException, Exception {
         ContactCollection contactCollection = new ContactCollection();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         contactCollection.add(contact);
@@ -47,7 +47,7 @@ public class ContactCollectionTest {
     }
 
     @Test(expected = ContactAlreadyExistException.class)
-    public void addContact_should_throw_an_exception_when_contact_already_exist() throws ContactAlreadyExistException {
+    public void addContact_should_throw_an_exception_when_contact_already_exist() throws ContactAlreadyExistException, Exception {
         ContactCollection contactCollection = new ContactCollection();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         contactCollection.add(contact);
@@ -55,7 +55,7 @@ public class ContactCollectionTest {
     }
 
     @Test
-    public void addContact_should_add_a_contact_in_contact_collection() throws ContactAlreadyExistException, ContactNotFoundException {
+    public void addContact_should_add_a_contact_in_contact_collection() throws ContactAlreadyExistException, ContactNotFoundException, Exception {
         ContactCollection contactCollection = new ContactCollection();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());        
         ContactInfo bobContactInfo = new ContactInfo("10.10.10.80", 9099, "Bob", "sysId2");

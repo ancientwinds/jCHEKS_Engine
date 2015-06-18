@@ -28,7 +28,7 @@ public class ModelTest {
     }
 
     @Test
-    public void addContact_should_notify_observer_that_a_contact_has_been_added() throws ContactAlreadyExistException{
+    public void addContact_should_notify_observer_that_a_contact_has_been_added() throws ContactAlreadyExistException, Exception{
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
@@ -38,7 +38,7 @@ public class ModelTest {
     }
 
     @Test (expected = ContactAlreadyExistException.class)
-    public void addContact_should_throw_an_exception_if_contact_already_exist() throws ContactAlreadyExistException{
+    public void addContact_should_throw_an_exception_if_contact_already_exist() throws ContactAlreadyExistException, Exception{
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         Model model = new Model();
         model.addContact(contact);
@@ -46,7 +46,7 @@ public class ModelTest {
     }
     
     @Test
-    public void addOutgoingMessage_should_notify_observer_that_a_message_has_been_sent() throws ContactAlreadyExistException {
+    public void addOutgoingMessage_should_notify_observer_that_a_message_has_been_sent() throws ContactAlreadyExistException, Exception {
         String messageContent = "Hello";
         Model model = new Model();
         ObserverMock observer = new ObserverMock();
@@ -57,7 +57,7 @@ public class ModelTest {
     }
     
     @Test
-    public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException {
+    public void addIncomingMessage_should_notify_observer_that_a_message_has_been_received() throws ContactAlreadyExistException, Exception {
         String messageContent = "Hello";
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         Model model = new Model();
@@ -69,7 +69,7 @@ public class ModelTest {
     }
     
     @Test
-    public void getLastOutgoingMessageBySystemId_should_return_the_last_message() throws ContactNotFoundException, ContactAlreadyExistException {
+    public void getLastOutgoingMessageBySystemId_should_return_the_last_message() throws ContactNotFoundException, ContactAlreadyExistException, Exception {
         String messageContent = "Hello";
         String messageContent2 = "Hello number 2";
         Model model = new Model();
@@ -81,7 +81,7 @@ public class ModelTest {
     }
     
     @Test
-    public void findContactByReceiverSystemId_should_return_the_contact() throws ContactNotFoundException, ContactAlreadyExistException {
+    public void findContactByReceiverSystemId_should_return_the_contact() throws ContactNotFoundException, ContactAlreadyExistException, Exception {
 
         Model model = new Model();
         Contact aliceContact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
@@ -94,7 +94,7 @@ public class ModelTest {
     }
     
     @Test
-    public void findContactByName_should_return_the_contact() throws ContactNotFoundException, ContactAlreadyExistException {
+    public void findContactByName_should_return_the_contact() throws ContactNotFoundException, ContactAlreadyExistException, Exception {
 
         Model model = new Model();
         Contact aliceContact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
