@@ -1,6 +1,6 @@
 package com.archosResearch.jCHEKS.engine.model.contact.exception;
 
-import com.archosResearch.jCHEKS.engine.exception.EngineException;
+import com.archosResearch.jCHEKS.concept.exception.EngineException;
 
 /**
  *

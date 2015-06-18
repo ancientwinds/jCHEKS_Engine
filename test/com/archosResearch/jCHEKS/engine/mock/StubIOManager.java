@@ -14,10 +14,7 @@ public class StubIOManager implements InputOutputManager{
     public void setEngine(AbstractEngine engine) {}
 
     @Override
-    public void forwardOutgoingMessage(String messageContent) {}
-
-    @Override
-    public void setSelectedContactName(String name) {}
+    public void forwardOutgoingMessage(String messageContent, String contactName) {}
 
     @Override
     public void messageSent(OutgoingMessage message, String contactName) {}
@@ -27,5 +24,8 @@ public class StubIOManager implements InputOutputManager{
 
     @Override
     public void contactAdded(String contactName) {}
+
+    @Override
+    public void refresh() {}
     
 }
