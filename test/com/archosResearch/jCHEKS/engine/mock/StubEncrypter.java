@@ -5,7 +5,6 @@
  */
 package com.archosResearch.jCHEKS.engine.mock;
 
-import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
 import com.archosResearch.jCHEKS.concept.encrypter.AbstractEncrypter;
 
 /**
@@ -15,9 +14,9 @@ import com.archosResearch.jCHEKS.concept.encrypter.AbstractEncrypter;
 public class StubEncrypter extends AbstractEncrypter{
 
     @Override
-    public String encrypt(String text, AbstractChaoticSystem chaoticSystem) {return "encrypted";}
+    public String encrypt(String text, byte[] key, byte[] iv) {return "encrypted";}
 
     @Override
-    public String decrypt(String text, AbstractChaoticSystem chaoticSystem) {return "decrypted";}
+    public String decrypt(String text, byte[] key, byte[] iv) {return "decrypted";}
     
 }
