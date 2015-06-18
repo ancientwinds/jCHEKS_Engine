@@ -67,12 +67,15 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public String communicationReceived(AbstractCommunication communication) {
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
-            
-            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), contact.getReceivingChaoticSystem());
+            AbstractChaoticSystem chaoticSystem = contact.getReceivingChaoticSystem();
+            byte[] key = chaoticSystem.getKey();
+            byte[] iv = chaoticSystem.getIV();
+            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), key, iv);
            
             this.model.addIncomingMessage(decryptedMessage, contact); 
+            chaoticSystem.evolveSystem();
+            
             //TODO return something else.
-            contact.getReceivingChaoticSystem().evolveSystem();
             return "Testing secure ACK";
         } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,8 +151,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addOutgoingMessage(messageContent, contactName);
             
             Contact contact = this.model.findContactByName(contactName);
+            AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
+            byte[] key = chaoticSystem.getKey();
+            byte[] iv = chaoticSystem.getIV();
             
-            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, contact.getSendingChaoticSystem());
+            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, key, iv);
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
