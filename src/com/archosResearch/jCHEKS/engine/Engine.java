@@ -81,6 +81,40 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     }
     
     @Override
+    public void failToReceiveAck(AbstractCommunication communication) {
+        try {
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            message.updateState(AbstractMessage.State.FAILED);
+            this.ioManager.refresh();
+        } catch (ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    @Override
+    public void failToReceiveSecureAck(AbstractCommunication communication) {
+        try {
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            message.updateState(AbstractMessage.State.FAILED);
+            this.ioManager.refresh();
+        } catch (ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void timeOutReached(AbstractCommunication communication) {
+        try {
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            message.updateState(AbstractMessage.State.FAILED);
+            this.ioManager.refresh();
+        } catch (ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
     public void createContact(ContactInfo contactInfo){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
