@@ -126,13 +126,9 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         FileReader chaoticSystemReader = new FileReader();
         Contact contact;
         try {
-            AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem() + ".xml");
-            //TODO Change the type of system for the real one not the mock.
-            //TODO Maybe change the key lenght
+            AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
+            AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
-            AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem() + ".xml");
-            //TODO Change the type of system for the real one not the mock.
-            //TODO Maybe change the key lenght
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             try {
                 model.addContact(contact);
