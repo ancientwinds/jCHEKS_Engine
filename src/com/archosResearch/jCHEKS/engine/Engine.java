@@ -1,7 +1,5 @@
 package com.archosResearch.jCHEKS.engine;
 
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystem;
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.chaoticSystem.FileReader;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
