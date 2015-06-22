@@ -1,7 +1,5 @@
 package com.archosResearch.jCHEKS.engine;
 
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystem;
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.chaoticSystem.FileReader;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
@@ -19,6 +17,7 @@ import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.logging.*;
 import javax.crypto.NoSuchPaddingException;
 
@@ -41,10 +40,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public void ackReceived(AbstractCommunication communication) {
         try {
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            String systemId = communication.getSystemId();
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
             message.updateState(AbstractMessage.State.WAITING_FOR_SECURE_ACK);
             this.ioManager.refresh();
-            System.out.println("Ack received!!!");
+            this.ioManager.log("Acknowledge received.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -54,11 +54,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public void secureAckReceived(AbstractCommunication communication) {
         try {
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            String systemId = communication.getSystemId();
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
             message.updateState(AbstractMessage.State.OK);
+            Contact contact = this.model.findContactByReceiverSystemId(systemId);
             this.ioManager.refresh();
-            System.out.println("Secure Ack received!!!");
-            Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
+            this.ioManager.log("Secure acknowledge received.", contact.getContactInfo().getName());
             contact.getSendingChaoticSystem().evolveSystem();
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,7 +74,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             byte[] key = chaoticSystem.getKey();
             byte[] iv = chaoticSystem.getIV();
             String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), key, iv);
-           
+            this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key)+" \n      IV" + Arrays.toString(iv), contact.getContactInfo().getName());
             this.model.addIncomingMessage(decryptedMessage, contact); 
             chaoticSystem.evolveSystem();
             
@@ -88,9 +89,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public void failToReceiveAck(AbstractCommunication communication) {
         try {
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            String systemId = communication.getSystemId();
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
             message.updateState(AbstractMessage.State.FAILED);
             this.ioManager.refresh();
+            this.ioManager.log("Failed to receive acknowledge.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,10 +103,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     @Override
     public void failToReceiveSecureAck(AbstractCommunication communication) {
-        try {
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+        try {String systemId = communication.getSystemId();
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
             message.updateState(AbstractMessage.State.FAILED);
             this.ioManager.refresh();
+            this.ioManager.log("Failed to receive secure acknowledge.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -111,9 +117,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public void timeOutReached(AbstractCommunication communication) {
         try {
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(communication.getSystemId());
+            String systemId = communication.getSystemId();
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
             message.updateState(AbstractMessage.State.FAILED);
             this.ioManager.refresh();
+            this.ioManager.log("Timeout reached.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
