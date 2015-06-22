@@ -1,6 +1,6 @@
 package com.archosResearch.jCHEKS.engine;
 
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
+import com.archosResearch.jCHEKS.chaoticSystem.FileReader;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
 import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
@@ -57,7 +57,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.ioManager.refresh();
             System.out.println("Secure Ack received!!!");
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
-            contact.getSendingChaoticSystem().Evolve();
+            contact.getSendingChaoticSystem().evolveSystem();
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -67,12 +67,15 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public String communicationReceived(AbstractCommunication communication) {
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
-            
-            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), contact.getReceivingChaoticSystem());
+            AbstractChaoticSystem chaoticSystem = contact.getReceivingChaoticSystem();
+            byte[] key = chaoticSystem.getKey();
+            byte[] iv = chaoticSystem.getIV();
+            String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), key, iv);
            
             this.model.addIncomingMessage(decryptedMessage, contact); 
+            chaoticSystem.evolveSystem();
+            
             //TODO return something else.
-            contact.getReceivingChaoticSystem().Evolve();
             return "Testing secure ACK";
         } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,18 +121,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void createContact(ContactInfo contactInfo){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
-        
+        FileReader chaoticSystemReader = new FileReader();
         Contact contact;
         try {
-            AbstractChaoticSystem sendingSystem = new ChaoticSystemMock();
-            //TODO Change the type of system for the real one not the mock.
-            //TODO Maybe change the key lenght
-            sendingSystem.Generate(128);
+            AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
+            AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
-            AbstractChaoticSystem receivingSystem = new ChaoticSystemMock();
-            //TODO Change the type of system for the real one not the mock.
-            //TODO Maybe change the key lenght
-            receivingSystem.Generate(128);
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             try {
                 model.addContact(contact);
@@ -150,8 +147,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.model.addOutgoingMessage(messageContent, contactName);
             
             Contact contact = this.model.findContactByName(contactName);
+            AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
+            byte[] key = chaoticSystem.getKey();
+            byte[] iv = chaoticSystem.getIV();
             
-            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, contact.getSendingChaoticSystem());
+            String encryptedMessage = contact.getEncrypter().encrypt(messageContent, key, iv);
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
         } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);

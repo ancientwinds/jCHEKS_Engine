@@ -19,21 +19,21 @@ public class ContactTest {
     private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, contactName, "sysId");
 
     @Test
-    public void constructor_should_create_the_contact() {
+    public void constructor_should_create_the_contact() throws Exception {
         Contact contact = null;
         contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         assertNotNull(contact);
     }
     
     @Test
-    public void getName_should_return_the_name_of_the_contact() {
+    public void getName_should_return_the_name_of_the_contact() throws Exception {
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         String result = contact.getContactInfo().getName();
         assertEquals(contactName, result);
     }
 
     @Test
-    public void getCommunicator_should_return_the_communicator_of_the_contact() {
+    public void getCommunicator_should_return_the_communicator_of_the_contact() throws Exception {
         AbstractCommunicator givenCommunicator = new StubCommunicator();
         Contact contact = new Contact(aliceContactInfo, givenCommunicator, new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
         AbstractCommunicator receivedCommunicator = contact.getCommunicator();
@@ -41,7 +41,7 @@ public class ContactTest {
     }
     
     @Test
-    public void getEncrypter_should_return_the_encrypter_of_the_contact() {
+    public void getEncrypter_should_return_the_encrypter_of_the_contact() throws Exception {
         AbstractEncrypter givenEncrypter = new StubEncrypter();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), givenEncrypter, new StubChaoticSystem(), new StubChaoticSystem());
         AbstractEncrypter receivedEncrypter = contact.getEncrypter();
@@ -49,7 +49,7 @@ public class ContactTest {
     }
     
     @Test
-    public void getSendingChaoticSystem_should_return_the_chaoticSystem_of_the_contact() {
+    public void getSendingChaoticSystem_should_return_the_chaoticSystem_of_the_contact() throws Exception {
         AbstractChaoticSystem givenChaoticSystem = new StubChaoticSystem();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), givenChaoticSystem, new StubChaoticSystem());
         AbstractChaoticSystem receivedChaoticSystem = contact.getSendingChaoticSystem();
@@ -57,7 +57,7 @@ public class ContactTest {
     }
     
     @Test
-    public void getReceivingChaoticSystem_should_return_the_chaoticSystem_of_the_contact() {
+    public void getReceivingChaoticSystem_should_return_the_chaoticSystem_of_the_contact() throws Exception {
         AbstractChaoticSystem givenChaoticSystem = new StubChaoticSystem();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), givenChaoticSystem);
         AbstractChaoticSystem receivedChaoticSystem = contact.getReceivingChaoticSystem();

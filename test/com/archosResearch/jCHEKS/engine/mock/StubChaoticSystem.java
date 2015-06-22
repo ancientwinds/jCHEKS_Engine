@@ -8,17 +8,21 @@ import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
  */
 public class StubChaoticSystem extends AbstractChaoticSystem{
 
-    @Override
-    public void Evolve(int factor) {}
+    public StubChaoticSystem() throws Exception {
+        super(128);
+    }
 
     @Override
-    public byte[] Key(int requiredLength) { return null;}
+    public void evolveSystem(int factor) {}
 
     @Override
-    public void Reset() {}
+    public byte[] getKey(int requiredLength) { return null;}
 
     @Override
-    public AbstractChaoticSystem Clone() { return null;}
+    public void resetSystem() {}
+
+    @Override
+    public AbstractChaoticSystem cloneSystem() { return null;}
 
     @Override
     public String Serialize() { return null;}
@@ -27,6 +31,6 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     public void Deserialize(String serialization) {}
 
     @Override
-    public void Generate(int keyLength) throws Exception {}
+    public void generateSystem(int keyLength) throws Exception {}
     
 }
