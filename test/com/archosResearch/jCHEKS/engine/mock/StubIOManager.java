@@ -17,6 +17,9 @@ public class StubIOManager implements InputOutputManager{
     public void forwardOutgoingMessage(String messageContent, String contactName) {}
 
     @Override
+    public void log(String logMessage, String id) {}
+
+    @Override
     public void messageSent(OutgoingMessage message, String contactName) {}
 
     @Override
