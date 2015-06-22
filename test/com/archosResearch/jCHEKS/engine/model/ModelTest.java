@@ -17,8 +17,8 @@ import static org.junit.Assert.*;
  */
 public class ModelTest {
     
-    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "sysId");
-    private final ContactInfo bobContactInfo = new ContactInfo("9.9.9.9", 9002, "Bob", "bobSystemId");
+    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "sysId", "Alice-Bob", "Bob-Alice");
+    private final ContactInfo bobContactInfo = new ContactInfo("9.9.9.9", 9002, "Bob", "bobSystemId", "Bob-Alice", "Alice-Bob");
 
     @Test
     public void constructor_should_create_the_model(){

@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class ContactCollectionTest {
     
-    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "sysId");
+    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "sysId", "Alice-Bob", "Bob-Alice");
 
     @Test
     public void constructor_should_create_the_contact_collection() throws Exception {
@@ -58,7 +58,7 @@ public class ContactCollectionTest {
     public void addContact_should_add_a_contact_in_contact_collection() throws ContactAlreadyExistException, ContactNotFoundException, Exception {
         ContactCollection contactCollection = new ContactCollection();
         Contact contact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());        
-        ContactInfo bobContactInfo = new ContactInfo("10.10.10.80", 9099, "Bob", "sysId2");
+        ContactInfo bobContactInfo = new ContactInfo("10.10.10.80", 9099, "Bob", "sysId2", "Bob-Alice", "Alice-Bob");
         contactCollection.add(new Contact(bobContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem()));
         contactCollection.add(contact);
         Contact result = contactCollection.findByName("Alice");
