@@ -1,6 +1,8 @@
 package com.archosResearch.jCHEKS.engine;
 
+import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystem;
 import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
+import com.archosResearch.jCHEKS.chaoticSystem.FileReader;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
 import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
@@ -121,14 +123,14 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void createContact(ContactInfo contactInfo){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
-        
+        FileReader chaoticSystemReader = new FileReader();
         Contact contact;
         try {
-            AbstractChaoticSystem sendingSystem = new ChaoticSystemMock();
+            AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
             //TODO Change the type of system for the real one not the mock.
             //TODO Maybe change the key lenght
             
-            AbstractChaoticSystem receivingSystem = new ChaoticSystemMock();
+            AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             //TODO Change the type of system for the real one not the mock.
             //TODO Maybe change the key lenght
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
