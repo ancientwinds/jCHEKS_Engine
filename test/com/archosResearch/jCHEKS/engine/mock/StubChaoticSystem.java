@@ -9,7 +9,7 @@ import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
 public class StubChaoticSystem extends AbstractChaoticSystem{
 
     public StubChaoticSystem() throws Exception {
-        super("abc", 128);
+        super(128);
     }
 
     @Override
