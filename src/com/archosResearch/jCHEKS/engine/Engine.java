@@ -12,15 +12,12 @@ import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.communicator.*;
 import com.archosResearch.jCHEKS.concept.encrypter.AbstractEncrypter;
 import com.archosResearch.jCHEKS.concept.engine.message.*;
-import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
-import com.archosResearch.jCHEKS.concept.exception.EncrypterException;
+import com.archosResearch.jCHEKS.concept.exception.*;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
-import com.archosResearch.jCHEKS.messageChecker.MessageChecker;
-import com.archosResearch.jCHEKS.messageChecker.SecureAckGenerator;
-import com.archosResearch.jCHEKS.messageChecker.exception.MessageCheckerException;
-import com.archosResearch.jCHEKS.messageChecker.exception.SecureAckGeneratorException;
+import com.archosResearch.jCHEKS.messageChecker.*;
+import com.archosResearch.jCHEKS.messageChecker.exception.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.*;
@@ -71,7 +68,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                     message.updateState(AbstractMessage.State.OK);
                     this.ioManager.refresh();
                     this.ioManager.log("Secure acknowledge received.", contact.getContactInfo().getName());
-                    contact.getSendingChaoticSystem().evolveSystem();
+                    chaoticSystem.evolveSystem();
                 } else {
                     this.ioManager.log("Wrong secure ack received", contact.getContactInfo().getName());     
                 }
