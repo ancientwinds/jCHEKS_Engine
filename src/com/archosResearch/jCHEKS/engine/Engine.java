@@ -137,6 +137,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         FileReader chaoticSystemReader = new FileReader();
         Contact contact;
         try {
+            
             AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
             AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
@@ -166,7 +167,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, key, iv);
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
-        } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
+        } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
