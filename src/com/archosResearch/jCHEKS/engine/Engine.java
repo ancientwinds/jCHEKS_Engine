@@ -66,7 +66,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             byte[] secureAckKey = chaoticSystem.getKey(SecureAckGenerator.getKeyLength());
             
             try {
-                if(SecureAckGenerator.validateSecureAck(secureAckKey, secureAck, communication.getCipherCheck())) {
+                if(SecureAckGenerator.validateSecureAck(secureAckKey, secureAck, communication.getCipher())) {
                     OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
                     message.updateState(AbstractMessage.State.OK);
                     this.ioManager.refresh();
