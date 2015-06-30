@@ -173,7 +173,14 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             byte[] iv = chaoticSystem.getIV();
             
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, key, iv);
-            contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
+            String cipherCheck;
+            try {
+                cipherCheck = MessageChecker.encodeMessage(key, messageContent);
+                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, contact.getContactInfo().getUniqueId()));
+
+            } catch (MessageCheckerException ex) {
+                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
