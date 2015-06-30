@@ -63,7 +63,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             Contact contact = this.model.findContactByReceiverSystemId(systemId);
             AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
             
-            byte[] secureAckKey = chaoticSystem.getKey();
+            byte[] secureAckKey = chaoticSystem.getKey(SecureAckGenerator.getKeyLength());
             
             try {
                 if(SecureAckGenerator.validateSecureAck(secureAckKey, secureAck, communication.getCipherCheck())) {
@@ -80,6 +80,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             }
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -95,10 +97,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key), contact.getContactInfo().getName());
             
             try { 
-                byte[] checkKey = chaoticSystem.getKey();
+                byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
                 if(MessageChecker.validateMessage(checkKey, decryptedMessage, communication.getCipherCheck())) {
                     this.model.addIncomingMessage(decryptedMessage, contact);
-                    byte[] secureAckKey = chaoticSystem.getKey();
+                    byte[] secureAckKey = chaoticSystem.getKey(SecureAckGenerator.getKeyLength());
                     try {
                         String secureAck = SecureAckGenerator.generateSecureAck(secureAckKey, communication.getCipher());
                         chaoticSystem.evolveSystem();
@@ -202,7 +204,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             String encryptedMessage = encrypter.encrypt(messageContent, key);
             String cipherCheck;
             try {
-                cipherCheck = MessageChecker.encodeMessage(key, messageContent);
+                byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
+                cipherCheck = MessageChecker.encodeMessage(checkKey, messageContent);
                 contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, contact.getContactInfo().getUniqueId()));
 
             } catch (MessageCheckerException ex) {
