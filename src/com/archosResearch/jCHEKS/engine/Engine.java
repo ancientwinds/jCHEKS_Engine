@@ -1,5 +1,6 @@
 package com.archosResearch.jCHEKS.engine;
 
+import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.chaoticSystem.FileReader;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
@@ -135,6 +136,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         FileReader chaoticSystemReader = new FileReader();
         Contact contact;
         try {
+            
             AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
             AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
@@ -164,8 +166,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, key, iv);
             contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
-        } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
+        } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        } catch ( CommunicatorException ex) {
+            this.ioManager.log(ex.getMessage(), contactName);
         }
     }
 
