@@ -61,12 +61,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         try {
             String systemId = communication.getSystemId();
             Contact contact = this.model.findContactByReceiverSystemId(systemId);
-            AbstractChaoticSystem chaoticSystem = contact.getReceivingChaoticSystem();
-            
+            AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
+
             byte[] secureAckKey = chaoticSystem.getKey(SecureAckGenerator.getKeyLength());
             
             try {
-                if(SecureAckGenerator.validateSecureAck(secureAckKey, secureAck, communication.getCipher())) {
+                if(SecureAckGenerator.validateSecureAck(secureAckKey, communication.getCipher(), secureAck)) {
                     OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
                     message.updateState(AbstractMessage.State.OK);
                     this.ioManager.refresh();
