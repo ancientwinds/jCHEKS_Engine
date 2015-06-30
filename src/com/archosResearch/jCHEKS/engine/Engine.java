@@ -16,6 +16,8 @@ import com.archosResearch.jCHEKS.concept.exception.EncrypterException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
 import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
+import com.archosResearch.jCHEKS.messageChecker.MessageChecker;
+import com.archosResearch.jCHEKS.messageChecker.exception.MessageCheckerException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.*;
@@ -75,11 +77,19 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             byte[] iv = chaoticSystem.getIV();
             String decryptedMessage = contact.getEncrypter().decrypt(communication.getCipher(), key, iv);
             this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key)+" \n      IV" + Arrays.toString(iv), contact.getContactInfo().getName());
-            this.model.addIncomingMessage(decryptedMessage, contact); 
-            chaoticSystem.evolveSystem();
+            
+            try {          
+                if(MessageChecker.validateMessage(key, decryptedMessage, communication.getCipherCheck())) {
+                    this.model.addIncomingMessage(decryptedMessage, contact); 
+                    chaoticSystem.evolveSystem();
+                    return "Testing secure ACK";
+                }
+            } catch (MessageCheckerException ex) {
+                this.ioManager.log("Error while checking the cipher check: " + ex.getMessage(), contact.getContactInfo().getName());
+            }
             
             //TODO return something else.
-            return "Testing secure ACK";
+            return "No secure ACK";
         } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
