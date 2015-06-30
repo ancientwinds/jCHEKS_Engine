@@ -82,7 +82,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                 if(MessageChecker.validateMessage(key, decryptedMessage, communication.getCipherCheck())) {
                     this.model.addIncomingMessage(decryptedMessage, contact); 
                     chaoticSystem.evolveSystem();
-                    return "Testing secure ACK";
+                    return communication.getCipherCheck();
                 }
             } catch (MessageCheckerException ex) {
                 this.ioManager.log("Error while checking the cipher check: " + ex.getMessage(), contact.getContactInfo().getName());
