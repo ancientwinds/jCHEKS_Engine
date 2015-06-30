@@ -11,7 +11,6 @@ import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyEx
 import com.archosResearch.jCHEKS.gui.chat.view.JavaFxViewController;
 import com.archosResearch.jCHEKS.concept.communicator.*;
 import com.archosResearch.jCHEKS.concept.engine.message.*;
-import com.archosResearch.jCHEKS.concept.exception.CommunicatorException;
 import com.archosResearch.jCHEKS.concept.exception.EncrypterException;
 import com.archosResearch.jCHEKS.concept.ioManager.*;
 import com.archosResearch.jCHEKS.encrypter.RijndaelEncrypter;
@@ -132,29 +131,21 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     @Override
     public void createContact(ContactInfo contactInfo){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
-        communicator.addObserver(this);
         FileReader chaoticSystemReader = new FileReader();
         Contact contact;
         try {
-            
             AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
             AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
-            
+            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), receivingSystem.getSystemId());          
+            communicator.addObserver(this);
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
-            try {
-                model.addContact(contact);
-            } catch (ContactAlreadyExistException ex) {
-                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            model.addContact(contact);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | ContactAlreadyExistException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
-    
     @Override
     public void handleOutgoingMessage(String messageContent, String contactName) {
         try {
@@ -166,7 +157,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             byte[] iv = chaoticSystem.getKey(128);
             
             String encryptedMessage = contact.getEncrypter().encrypt(messageContent, key, iv);
-            contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getContactInfo().getUniqueId()));
+            contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, "chipherCheck", contact.getReceivingChaoticSystem().getSystemId()));
         } catch (ContactNotFoundException | EncrypterException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

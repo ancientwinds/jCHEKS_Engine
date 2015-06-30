@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class ContactTest {
     private final String contactName = "Alice";
-    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, contactName, "sysId");
+    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, contactName, "path1", "path2");
 
     @Test
     public void constructor_should_create_the_contact() throws Exception {

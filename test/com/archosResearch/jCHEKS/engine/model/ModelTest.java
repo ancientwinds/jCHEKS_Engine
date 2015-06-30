@@ -1,5 +1,6 @@
 package com.archosResearch.jCHEKS.engine.model;
 
+import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.concept.ioManager.ContactInfo;
 import com.archosResearch.jCHEKS.engine.mock.ObserverMock;
 import com.archosResearch.jCHEKS.engine.mock.StubChaoticSystem;
@@ -17,8 +18,8 @@ import static org.junit.Assert.*;
  */
 public class ModelTest {
     
-    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "sysId");
-    private final ContactInfo bobContactInfo = new ContactInfo("9.9.9.9", 9002, "Bob", "bobSystemId");
+    private final ContactInfo aliceContactInfo = new ContactInfo("10.10.10.10", 9000, "Alice", "path1", "path2");
+    private final ContactInfo bobContactInfo = new ContactInfo("9.9.9.9", 9002, "Bob", "path1", "path2");
 
     @Test
     public void constructor_should_create_the_model(){
@@ -73,23 +74,25 @@ public class ModelTest {
         String messageContent = "Hello";
         String messageContent2 = "Hello number 2";
         Model model = new Model();
-        model.addContact(new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem()));
+        StubChaoticSystem sys = new StubChaoticSystem();
+        model.addContact(new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), sys));
         model.addOutgoingMessage(messageContent, aliceContactInfo.getName());
         model.addOutgoingMessage(messageContent2, aliceContactInfo.getName());
 
-        assertEquals(messageContent2, model.getLastOutgoingMessageBySystemId(aliceContactInfo.getUniqueId()).getContent());
+        assertEquals(messageContent2, model.getLastOutgoingMessageBySystemId(sys.getSystemId()).getContent());
     }
     
     @Test
     public void findContactByReceiverSystemId_should_return_the_contact() throws ContactNotFoundException, ContactAlreadyExistException, Exception {
 
         Model model = new Model();
-        Contact aliceContact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem());
+        StubChaoticSystem sys = new StubChaoticSystem();
+        Contact aliceContact = new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), sys);
         model.addContact(aliceContact);
         model.addContact(new Contact(bobContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), new StubChaoticSystem()));
 
-        Contact contact = model.findContactByReceiverSystemId(aliceContactInfo.getUniqueId());
-
+        Contact contact = model.findContactByReceiverSystemId(sys.getSystemId());
+        System.out.println(contact.getContactInfo().getName());
         assertEquals(contact, aliceContact);
     }
     
