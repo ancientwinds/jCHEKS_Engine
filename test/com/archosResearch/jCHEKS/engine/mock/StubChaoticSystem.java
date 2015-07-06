@@ -25,7 +25,7 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     public AbstractChaoticSystem cloneSystem() { return null;}
 
     @Override
-    public String Serialize() { return null;}
+    public String serialize() { return null;}
 
     @Override
     public void Deserialize(String serialization) {}
