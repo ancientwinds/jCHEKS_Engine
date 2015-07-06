@@ -86,12 +86,13 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public String communicationReceived(AbstractCommunication communication) {
         try {
             Contact contact = this.model.findContactByReceiverSystemId(communication.getSystemId());
+            String contactName = contact.getContactInfo().getName();
             AbstractChaoticSystem chaoticSystem = contact.getReceivingChaoticSystem();
             AbstractEncrypter encrypter = contact.getEncrypter();
             
             byte[] key = chaoticSystem.getKey(encrypter.bytesNeeded());
             String decryptedMessage = encrypter.decrypt(communication.getCipher(), key);
-            this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key), contact.getContactInfo().getName());
+            this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key), contactName);
             
             try { 
                 byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
@@ -103,12 +104,12 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                         chaoticSystem.evolveSystem();
                         return secureAck;
                     } catch (SecureAckGeneratorException ex) {
-                        this.ioManager.log("Error: " + ex.getMessage(), contact.getContactInfo().getName());
+                        this.ioManager.log("Error: " + ex.getMessage(), contactName);
                     }
                     
                 }
             } catch (MessageCheckerException ex) {
-                this.ioManager.log("Error while checking the cipher check: " + ex.getMessage(), contact.getContactInfo().getName());
+                this.ioManager.log("Error while checking the cipher check: " + ex.getMessage(), contactName);
             }
             
             //TODO return something else.
@@ -185,8 +186,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         communicator.addObserver(this);
         FileReader chaoticSystemReader = new FileReader();
         Contact contact;
-        try {
-            
+        try {            
             AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
             AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
@@ -200,8 +200,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }        
     }
     
     @Override
