@@ -1,6 +1,5 @@
 package com.archosResearch.jCHEKS.engine;
 
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.chaoticSystem.FileReader;
 import com.archosResearch.jCHEKS.communicator.Communication;
 import com.archosResearch.jCHEKS.communicator.tcp.*;
@@ -199,4 +198,5 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         InputOutputManager ioManager = JavaFxViewController.getInstance();
         new Engine(model, ioManager);
     }
+
 }
