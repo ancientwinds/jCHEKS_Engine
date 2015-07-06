@@ -32,6 +32,11 @@ public class StubModel extends AbstractModel{
     }
 
     @Override
+    public Contact findContactBySendingSystemId(String sendingSystemId) throws ContactNotFoundException {
+        return null;
+    }
+
+    @Override
     public OutgoingMessage getLastOutgoingMessageBySystemId(String contactName) throws ContactNotFoundException {return null;}
     
 }
