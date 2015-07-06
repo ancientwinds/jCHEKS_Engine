@@ -197,7 +197,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             try {
                 byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
                 cipherCheck = MessageChecker.encodeMessage(checkKey, messageContent);
-                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, contact.getContactInfo().getUniqueId()));
+                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, chaoticSystem.getSystemId()));
 
             } catch (MessageCheckerException ex) {
                 Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
