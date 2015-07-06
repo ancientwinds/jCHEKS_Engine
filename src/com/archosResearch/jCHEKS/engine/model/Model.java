@@ -38,16 +38,21 @@ public class Model extends AbstractModel {
         this.notifyMessageReceived(message, contact.getContactInfo().getName());
     }
 
+    @Override
+    public Contact findContactBySendingSystemId(String sendingSystemId) throws ContactNotFoundException {
+        return this.contactCollection.findBySendingSystemId(sendingSystemId);
+    }
+
     
     @Override
     public OutgoingMessage getLastOutgoingMessageBySystemId(String systemId) throws ContactNotFoundException{
-        Contact contact = this.findContactByReceiverSystemId(systemId);
+        Contact contact = this.findContactBySendingSystemId(systemId);
         return lastMessageSent.get(contact.getContactInfo().getName());
     }
     
     @Override
     public Contact findContactByReceiverSystemId(String systemId) throws ContactNotFoundException{
-        return this.contactCollection.findByUniqueId(systemId);
+        return this.contactCollection.findByReceivingSystemId(systemId);
     }
     
     @Override
