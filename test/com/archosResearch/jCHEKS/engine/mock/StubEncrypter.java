@@ -14,9 +14,12 @@ import com.archosResearch.jCHEKS.concept.encrypter.AbstractEncrypter;
 public class StubEncrypter extends AbstractEncrypter{
 
     @Override
-    public String encrypt(String text, byte[] key, byte[] iv) {return "encrypted";}
+    public String encrypt(String text, byte[] keyByte) {return "encrypted";}
 
     @Override
-    public String decrypt(String text, byte[] key, byte[] iv) {return "decrypted";}
+    public String decrypt(String text, byte[] keyByte) {return "decrypted";}
+
+    @Override
+    public int bytesNeeded() { return 144; }
     
 }
