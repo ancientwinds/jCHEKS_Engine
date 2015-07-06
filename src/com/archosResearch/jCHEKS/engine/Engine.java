@@ -165,6 +165,22 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     }
     
     @Override
+    public void exceptionThrown(CommunicatorException exception, AbstractCommunication communication) {
+        try {
+            String systemId = communication.getSystemId();
+            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
+            message.updateState(AbstractMessage.State.FAILED);
+            this.ioManager.refresh();
+            this.ioManager.log(exception.getMessage(), this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+
+        } catch (ContactNotFoundException ex) {
+            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+            
+
+    
+    @Override
     public void createContact(ContactInfo contactInfo){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
@@ -225,4 +241,5 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
         InputOutputManager ioManager = JavaFxViewController.getInstance();
         new Engine(model, ioManager);
     }
+
 }
