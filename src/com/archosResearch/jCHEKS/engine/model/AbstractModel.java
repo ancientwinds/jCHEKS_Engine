@@ -20,6 +20,8 @@ public abstract class AbstractModel extends ModelObservable {
 
     public abstract Contact findContactByReceiverSystemId(String receiverSystemId)  throws ContactNotFoundException;
 
+    public abstract Contact findContactBySendingSystemId(String sendingSystemId)  throws ContactNotFoundException;
+    
     public abstract Contact findContactByName(String name)  throws ContactNotFoundException;
 
     public abstract OutgoingMessage getLastOutgoingMessageBySystemId(String contactName) throws ContactNotFoundException;
