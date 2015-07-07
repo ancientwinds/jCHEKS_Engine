@@ -10,18 +10,18 @@ import com.archosResearch.jCHEKS.concept.ioManager.ContactInfo;
  * @author Michael Roussel <rousselm4@gmail.com>
  */
 public class Contact {
-    private ContactInfo contactInfo;
+    private final ContactInfo contactInfo;
     private final AbstractCommunicator communicator;
     private final AbstractEncrypter encrypter;
-    private final AbstractChaoticSystem chaoticSystem;
-    private final AbstractChaoticSystem chaoticSystem2;
+    private final AbstractChaoticSystem sendingChaoticSystem;
+    private final AbstractChaoticSystem receivingChaoticSystem;
     
-    public Contact(ContactInfo contactInfo, AbstractCommunicator communicator, AbstractEncrypter encrypter, AbstractChaoticSystem chaoticSystem, AbstractChaoticSystem chaoticSystem2) {
+    public Contact(ContactInfo contactInfo, AbstractCommunicator communicator, AbstractEncrypter encrypter, AbstractChaoticSystem sendingChaoticSystem, AbstractChaoticSystem receivingChaoticSystem) {
         this.contactInfo = contactInfo;
         this.communicator = communicator;
         this.encrypter = encrypter;
-        this.chaoticSystem = chaoticSystem;
-        this.chaoticSystem2 = chaoticSystem2;
+        this.sendingChaoticSystem = sendingChaoticSystem;
+        this.receivingChaoticSystem = receivingChaoticSystem;
     }
 
     public ContactInfo getContactInfo() {
@@ -37,10 +37,10 @@ public class Contact {
     }
     
     public AbstractChaoticSystem getSendingChaoticSystem() {
-        return this.chaoticSystem;
+        return this.sendingChaoticSystem;
     }
     
     public AbstractChaoticSystem getReceivingChaoticSystem() {
-        return this.chaoticSystem2;
+        return this.receivingChaoticSystem;
     }
 }

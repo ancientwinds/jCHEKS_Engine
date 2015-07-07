@@ -20,6 +20,6 @@ public class StubEncrypter extends AbstractEncrypter{
     public String decrypt(String text, byte[] keyByte) {return "decrypted";}
 
     @Override
-    public int bytesNeeded() { return 144; }
+    public int getByteNeeded() { return 144; }
     
 }
