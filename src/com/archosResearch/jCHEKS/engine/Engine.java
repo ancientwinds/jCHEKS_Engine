@@ -184,11 +184,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void createContact(ContactInfo contactInfo){
         AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
-        FileReader chaoticSystemReader = new FileReader();
+
         Contact contact;
         try {            
-            AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
-            AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
+            AbstractChaoticSystem sendingSystem = FileReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
+            AbstractChaoticSystem receivingSystem = FileReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             try {
