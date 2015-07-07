@@ -28,7 +28,7 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     public String serialize() { return null;}
 
     @Override
-    public void Deserialize(String serialization) {}
+    public void deserialize(String serialization) {}
 
     @Override
     public void generateSystem(int keyLength) throws Exception {}
