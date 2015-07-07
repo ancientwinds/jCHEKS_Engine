@@ -1,14 +1,9 @@
 package com.archosResearch.jCHEKS.engine.model;
 
-import com.archosResearch.jCHEKS.chaoticSystem.ChaoticSystemMock;
 import com.archosResearch.jCHEKS.concept.ioManager.ContactInfo;
-import com.archosResearch.jCHEKS.engine.mock.ObserverMock;
-import com.archosResearch.jCHEKS.engine.mock.StubChaoticSystem;
-import com.archosResearch.jCHEKS.engine.mock.StubCommunicator;
-import com.archosResearch.jCHEKS.engine.mock.StubEncrypter;
+import com.archosResearch.jCHEKS.engine.mock.*;
 import com.archosResearch.jCHEKS.engine.model.contact.Contact;
-import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactAlreadyExistException;
-import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundException;
+import com.archosResearch.jCHEKS.engine.model.contact.exception.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

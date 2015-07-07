@@ -181,7 +181,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     @Override
     public void createContact(ContactInfo contactInfo){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getReceivingChaoticSystem()/*Maybe system id or something else, used as unique id.*/);          
         communicator.addObserver(this);
 
         Contact contact;
@@ -212,7 +212,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             try {
                 byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
                 String cipherCheck = MessageChecker.encodeMessage(checkKey, messageContent);
-                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, contact.getContactInfo().getUniqueId()));
+                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, chaoticSystem.getSystemId()));
 
             } catch (MessageCheckerException ex) {
                 Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);

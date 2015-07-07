@@ -31,6 +31,6 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     public void deserialize(String serialization) {}
 
     @Override
-    public void generateSystem(int keyLength) throws Exception {}
+    public void generateSystem(int keyLength) {}
     
 }
