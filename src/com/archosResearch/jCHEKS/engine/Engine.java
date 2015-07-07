@@ -59,25 +59,26 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             String systemId = communication.getSystemId();
             Contact contact = this.model.findContactBySendingSystemId(systemId);
             AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
-
-            byte[] secureAckKey = chaoticSystem.getKey(SecureAckGenerator.getKeyLength());
+            String contactName = contact.getContactInfo().getName();
             
             try {
+                byte[] secureAckKey = chaoticSystem.getKey(SecureAckGenerator.getKeyLength());            
+            
                 if(SecureAckGenerator.validateSecureAck(secureAckKey, communication.getCipher(), secureAck)) {
                     OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
                     message.updateState(AbstractMessage.State.OK);
                     this.ioManager.refresh();
-                    this.ioManager.log("Secure acknowledge received.", contact.getContactInfo().getName());
+                    this.ioManager.log("Secure acknowledge received.", contactName);
                     chaoticSystem.evolveSystem();
                 } else {
-                    this.ioManager.log("Wrong secure ack received", contact.getContactInfo().getName());     
+                    this.ioManager.log("Wrong secure ack received", contactName);     
                 }
             } catch (SecureAckGeneratorException ex) {
-                    this.ioManager.log("Error while validating the secure ack.", contact.getContactInfo().getName());     
+                this.ioManager.log("Error while validating the secure ack.", contactName);     
+            } catch (Exception ex) {
+                this.ioManager.log("Error getting secureAck key.", contactName);     
             }
         } catch (ContactNotFoundException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -90,11 +91,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             AbstractChaoticSystem chaoticSystem = contact.getReceivingChaoticSystem();
             AbstractEncrypter encrypter = contact.getEncrypter();
             
-            byte[] key = chaoticSystem.getKey(encrypter.bytesNeeded());
-            String decryptedMessage = encrypter.decrypt(communication.getCipher(), key);
-            this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key), contactName);
-            
-            try { 
+            try {
+                byte[] key = chaoticSystem.getKey(encrypter.getByteNeeded());
+                String decryptedMessage = encrypter.decrypt(communication.getCipher(), key);
+                this.ioManager.log("Communication received: \n      Key: " + Arrays.toString(key), contactName);
+                         
                 byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
                 if(MessageChecker.validateMessage(checkKey, decryptedMessage, communication.getCipherCheck())) {
                     this.model.addIncomingMessage(decryptedMessage, contact);
@@ -105,8 +106,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                         return secureAck;
                     } catch (SecureAckGeneratorException ex) {
                         this.ioManager.log("Error: " + ex.getMessage(), contactName);
-                    }
-                    
+                    }                    
                 }
             } catch (MessageCheckerException ex) {
                 this.ioManager.log("Error while checking the cipher check: " + ex.getMessage(), contactName);
@@ -126,8 +126,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void failToReceiveAck(AbstractCommunication communication) {
         try {
             String systemId = communication.getSystemId();
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
-            message.updateState(AbstractMessage.State.FAILED);
+            this.lastMessageHasFailed(systemId);
+            
             this.ioManager.refresh();
             this.ioManager.log("Failed to receive acknowledge.", this.model.findContactBySendingSystemId(systemId).getContactInfo().getName());
 
@@ -139,9 +139,10 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
 
     @Override
     public void failToReceiveSecureAck(AbstractCommunication communication) {
-        try {String systemId = communication.getSystemId();
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
-            message.updateState(AbstractMessage.State.FAILED);
+        try {
+            String systemId = communication.getSystemId();
+            this.lastMessageHasFailed(systemId);
+            
             this.ioManager.refresh();
             this.ioManager.log("Failed to receive secure acknowledge.", this.model.findContactBySendingSystemId(systemId).getContactInfo().getName());
 
@@ -154,8 +155,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void timeOutReached(AbstractCommunication communication) {
         try {
             String systemId = communication.getSystemId();
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
-            message.updateState(AbstractMessage.State.FAILED);
+            this.lastMessageHasFailed(systemId);
+            
             this.ioManager.refresh();
             this.ioManager.log("Timeout reached.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
 
@@ -168,27 +169,26 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void exceptionThrown(CommunicatorException exception, AbstractCommunication communication) {
         try {
             String systemId = communication.getSystemId();
-            OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
-            message.updateState(AbstractMessage.State.FAILED);
+            this.lastMessageHasFailed(systemId);
+            
             this.ioManager.refresh();
             this.ioManager.log(exception.getMessage(), this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-            
-
+    } 
     
     @Override
     public void createContact(ContactInfo contactInfo){
-        FileReader chaoticSystemReader = new FileReader();
+        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getUniqueId()/*Maybe system id or something else, used as unique id.*/);          
+        communicator.addObserver(this);
+
         Contact contact;
         try {            
-            AbstractChaoticSystem sendingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
-            AbstractChaoticSystem receivingSystem = chaoticSystemReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
-            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), receivingSystem.getSystemId());          
-            communicator.addObserver(this);
+            AbstractChaoticSystem sendingSystem = FileReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
+            AbstractChaoticSystem receivingSystem = FileReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
+            
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             model.addContact(contact);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | ContactAlreadyExistException ex) {
@@ -206,14 +206,13 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
             AbstractEncrypter encrypter = contact.getEncrypter();
             
-            byte[] key = chaoticSystem.getKey(encrypter.bytesNeeded());   
+            byte[] key = chaoticSystem.getKey(encrypter.getByteNeeded());   
             
             String encryptedMessage = encrypter.encrypt(messageContent, key);
-            String cipherCheck;
             try {
                 byte[] checkKey = chaoticSystem.getKey(MessageChecker.getKeyLength());
-                cipherCheck = MessageChecker.encodeMessage(checkKey, messageContent);
-                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, chaoticSystem.getSystemId()));
+                String cipherCheck = MessageChecker.encodeMessage(checkKey, messageContent);
+                contact.getCommunicator().sendCommunication(new Communication(encryptedMessage, cipherCheck, contact.getContactInfo().getUniqueId()));
 
             } catch (MessageCheckerException ex) {
                 Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -228,6 +227,11 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     @Override
     public void setReceivingPort(int port) {
         TCPReceiver.getInstance(port);
+    }
+    
+    private void lastMessageHasFailed(String systemId) throws ContactNotFoundException {
+        OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
+        message.updateState(AbstractMessage.State.FAILED);
     }
     
     public static void main(String args[]) throws ContactAlreadyExistException{
