@@ -181,13 +181,14 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     
     @Override
     public void createContact(ContactInfo contactInfo){
-        AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), contactInfo.getReceivingChaoticSystem()/*Maybe system id or something else, used as unique id.*/);          
-        communicator.addObserver(this);
 
         Contact contact;
         try {            
             AbstractChaoticSystem sendingSystem = FileReader.readChaoticSystem(contactInfo.getSendingChaoticSystem());
             AbstractChaoticSystem receivingSystem = FileReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
+            
+            AbstractCommunicator communicator = new TCPCommunicator(new TCPSender(contactInfo.getIp(), contactInfo.getPort()), TCPReceiver.getInstance(), receivingSystem.getSystemId());          
+            communicator.addObserver(this);
             
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
             model.addContact(contact);
