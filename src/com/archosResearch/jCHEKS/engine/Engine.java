@@ -46,7 +46,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             OutgoingMessage message = this.model.getLastOutgoingMessageBySystemId(systemId);
             message.updateState(AbstractMessage.State.WAITING_FOR_SECURE_ACK);
             this.ioManager.refresh();
-            this.ioManager.log("Acknowledge received.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+            this.ioManager.log("Acknowledge received.", this.model.findContactBySendingSystemId(systemId).getContactInfo().getName());
 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +57,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
     public void secureAckReceived(AbstractCommunication communication, String secureAck) {
         try {
             String systemId = communication.getSystemId();
-            Contact contact = this.model.findContactByReceiverSystemId(systemId);
+            Contact contact = this.model.findContactBySendingSystemId(systemId);
             AbstractChaoticSystem chaoticSystem = contact.getSendingChaoticSystem();
             String contactName = contact.getContactInfo().getName();
             
@@ -129,7 +129,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.lastMessageHasFailed(systemId);
             
             this.ioManager.refresh();
-            this.ioManager.log("Failed to receive acknowledge.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+            this.ioManager.log("Failed to receive acknowledge.", this.model.findContactBySendingSystemId(systemId).getContactInfo().getName());
 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -144,7 +144,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             this.lastMessageHasFailed(systemId);
             
             this.ioManager.refresh();
-            this.ioManager.log("Failed to receive secure acknowledge.", this.model.findContactByReceiverSystemId(systemId).getContactInfo().getName());
+            this.ioManager.log("Failed to receive secure acknowledge.", this.model.findContactBySendingSystemId(systemId).getContactInfo().getName());
 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -190,18 +190,13 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             AbstractChaoticSystem receivingSystem = FileReader.readChaoticSystem(contactInfo.getReceivingChaoticSystem());
             
             contact = new Contact(contactInfo, communicator, new RijndaelEncrypter(), sendingSystem, receivingSystem);
-            try {
-                model.addContact(contact);
-            } catch (ContactAlreadyExistException ex) {
-                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            model.addContact(contact);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | ContactAlreadyExistException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
-    
     @Override
     public void handleOutgoingMessage(String messageContent, String contactName) {
         try {
