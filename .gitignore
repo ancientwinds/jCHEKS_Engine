@@ -6,3 +6,5 @@
 /build/
 /nbproject/private/
 /.jacocoverage/
+/system/
+*.json
