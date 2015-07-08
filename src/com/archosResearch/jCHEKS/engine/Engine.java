@@ -75,9 +75,9 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                 }
             } catch (SecureAckGeneratorException ex) {
                 this.ioManager.log("Error while validating the secure ack.", contactName);     
-            } catch (Exception ex) {
+            } catch (ChaoticSystemException ex) {
                 this.ioManager.log("Error getting secureAck key.", contactName);     
-            }
+            } 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,13 +110,13 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                 }
             } catch (MessageCheckerException ex) {
                 this.ioManager.log("Error while checking the cipher check: " + ex.getMessage(), contactName);
+            } catch (ChaoticSystemException ex) {
+                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             //TODO return something else.
             return "No secure ACK";
         } catch (ContactNotFoundException | EncrypterException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -218,9 +218,7 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
             } catch (MessageCheckerException ex) {
                 Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch ( CommunicatorException | ContactNotFoundException | EncrypterException ex) {
-            Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch ( CommunicatorException | ContactNotFoundException | EncrypterException | ChaoticSystemException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
