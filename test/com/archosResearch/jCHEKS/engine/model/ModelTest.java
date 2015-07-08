@@ -70,7 +70,7 @@ public class ModelTest {
         String messageContent2 = "Hello number 2";
         Model model = new Model();
         StubChaoticSystem sys = new StubChaoticSystem();
-        model.addContact(new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), new StubChaoticSystem(), sys));
+        model.addContact(new Contact(aliceContactInfo, new StubCommunicator(), new StubEncrypter(), sys, new StubChaoticSystem()));
         model.addOutgoingMessage(messageContent, aliceContactInfo.getName());
         model.addOutgoingMessage(messageContent2, aliceContactInfo.getName());
 
