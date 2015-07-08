@@ -1,6 +1,7 @@
 package com.archosResearch.jCHEKS.engine.mock;
 
 import com.archosResearch.jCHEKS.concept.chaoticSystem.AbstractChaoticSystem;
+import java.util.Random;
 
 /**
  *
@@ -31,6 +32,6 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     public void deserialize(String serialization) {}
 
     @Override
-    public void generateSystem(int keyLength) {}
+    public void generateSystem(int keyLength, Random random) {}
     
 }
