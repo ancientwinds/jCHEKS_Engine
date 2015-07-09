@@ -10,6 +10,8 @@ import com.archosResearch.jCHEKS.concept.ioManager.InputOutputManager;
  */
 public class StubIOManager implements InputOutputManager{
 
+    public boolean ackLogged = false;
+    
     @Override
     public void setEngine(AbstractEngine engine) {}
 
@@ -17,7 +19,11 @@ public class StubIOManager implements InputOutputManager{
     public void forwardOutgoingMessage(String messageContent, String contactName) {}
 
     @Override
-    public void log(String logMessage, String id) {}
+    public void log(String logMessage, String id) {
+        if(logMessage.equals("Acknowledge received.")) {
+            this.ackLogged = true;
+        }
+    }
 
     @Override
     public void messageSent(OutgoingMessage message, String contactName) {}

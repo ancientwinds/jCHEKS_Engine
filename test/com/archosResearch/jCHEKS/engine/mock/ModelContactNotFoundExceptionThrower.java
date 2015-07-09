@@ -13,8 +13,7 @@ import com.archosResearch.jCHEKS.engine.model.contact.exception.ContactNotFoundE
  */
 public class ModelContactNotFoundExceptionThrower extends AbstractModel {
 
-    public ModelContactNotFoundExceptionThrower() {
-    }
+    public ModelContactNotFoundExceptionThrower() {}
 
     @Override
     public void addContact(Contact contact) throws ContactAlreadyExistException {}
