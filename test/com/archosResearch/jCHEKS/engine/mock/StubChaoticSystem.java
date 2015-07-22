@@ -34,4 +34,7 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     @Override
     public void generateSystem(int keyLength, Random random) {}
     
+    @Override
+    public int getAgentsCount() { return 0;}
+    
 }
