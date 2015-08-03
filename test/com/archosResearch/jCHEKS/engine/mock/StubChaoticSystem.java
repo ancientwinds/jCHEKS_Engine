@@ -20,6 +20,11 @@ public class StubChaoticSystem extends AbstractChaoticSystem{
     public byte[] getKey(int requiredLength) { return null;}
 
     @Override
+    public boolean isSameState(AbstractChaoticSystem system) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void resetSystem() {}
 
     @Override
