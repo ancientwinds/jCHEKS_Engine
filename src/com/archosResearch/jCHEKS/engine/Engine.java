@@ -77,6 +77,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                 this.ioManager.log("Error while validating the secure ack.", contactName);     
             } catch (ChaoticSystemException ex) {
                 this.ioManager.log("Error getting secureAck key.", contactName);     
+            } catch (Exception ex) {
+                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
             } 
         } catch (ContactNotFoundException ex) {
             Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,6 +108,8 @@ public class Engine extends AbstractEngine  implements CommunicatorObserver{
                         return secureAck;
                     } catch (SecureAckGeneratorException ex) {
                         this.ioManager.log("Error: " + ex.getMessage(), contactName);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
                     }                    
                 }
             } catch (MessageCheckerException ex) {
